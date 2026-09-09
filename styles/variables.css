@@ -1,0 +1,145 @@
+/* ---------------------------------------------------------------------------
+   DICKALO — CSS custom properties (light theme).
+
+   Mirrors `tailwind.config.ts` and `config/branding.ts`. These exist for the
+   places a Tailwind class cannot reach: pseudo-element gradients, inline SVG
+   fills, third-party widgets and JS-driven interpolation.
+
+   The page is white, black is the structural colour, and gold is punctuation.
+   See the gold rule in `tailwind.config.ts` before using --color-gold on text.
+   --------------------------------------------------------------------------- */
+
+:root {
+  /* --- Brand ------------------------------------------------------------- */
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  /* Gold is a FILL colour. Black sits on it at 14.1:1. */
+  --color-gold: #edc65a;
+  --color-gold-deep: #d9b400;
+  /* The only gold legible as TEXT on white — 5.6:1. */
+  --color-gold-ink: #7a6600;
+
+  /* --- Neutral ramp, light to dark --------------------------------------- */
+  --color-ink-50: #fafaf8;
+  --color-ink-100: #f2f2ee;
+  --color-ink-200: #e4e4df;
+  --color-ink-300: #c9c9c2;
+  --color-ink-400: #a3a39b;
+  --color-ink-500: #8a8a83;
+  --color-ink-600: #66665f;
+  --color-ink-700: #4a4a45;
+  --color-ink-800: #33332f;
+  --color-ink-900: #1f1f1c;
+  --color-ink-950: #0a0a09;
+
+  /* --- Semantic surfaces ------------------------------------------------- */
+  --surface-base: #f6f5f0;
+  --surface-raised: #efeee7;
+  --surface-sunken: #eae9e1;
+  --surface-inverse: #272b24;
+  --surface-inverse-raised: var(--color-ink-900);
+
+  /* --- Semantic text ----------------------------------------------------- */
+  --text-primary: #242620;
+  --text-secondary: var(--color-ink-700);
+  --text-muted: var(--color-ink-600);
+  --text-faint: var(--color-ink-500);
+  --text-inverse: var(--color-ink-50);
+  --text-inverse-muted: var(--color-ink-400);
+  --text-accent: var(--color-gold-ink);
+  --text-on-accent: var(--color-ink-950);
+
+  /* --- Hairlines --------------------------------------------------------- */
+  --line: rgba(10, 10, 9, 0.11);
+  --line-subtle: rgba(10, 10, 9, 0.06);
+  --line-strong: rgba(10, 10, 9, 0.22);
+  --line-inverse: rgba(255, 255, 255, 0.14);
+
+  /* --- Feedback ---------------------------------------------------------- */
+  /* Darkened from the dark-theme values so both clear AA on white. */
+  --color-success: #127a3e;
+  --color-danger: #b42318;
+
+  /* --- Typography -------------------------------------------------------- */
+  /*
+    One family for the whole site. Hierarchy comes from weight, size and
+    tracking rather than from mixing two typefaces — which is both calmer and
+    one less font to download.
+
+    Order matters: Trueno if the files are present, the size-adjusted fallback
+    next, then the next/font-hosted Plus Jakarta Sans, then system.
+  */
+  --font-sans-stack:
+    'Trueno', 'Trueno Fallback', var(--font-body), system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* Kept as aliases so existing rules do not all have to change at once. */
+  --font-display-stack: var(--font-sans-stack);
+  --font-body-stack: var(--font-sans-stack);
+
+  /* --- Layout ------------------------------------------------------------ */
+  --container-max: 90rem;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --section-space: clamp(4.5rem, 8vw, 8rem);
+  --nav-height: 5rem;
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 18px;
+  --radius-xl: 28px;
+
+  /* --- Motion ------------------------------------------------------------ */
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-expo: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-overshoot: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --duration-instant: 150ms;
+  --duration-fast: 300ms;
+  --duration-base: 600ms;
+  --duration-slow: 900ms;
+  --duration-cinematic: 1400ms;
+
+  /* --- Elevation --------------------------------------------------------- */
+  /* Low alpha and wide spread. A dark-theme shadow reads as dirt on white. */
+  --shadow-lift: 0 18px 48px -20px rgba(10, 10, 9, 0.22), 0 2px 8px -2px rgba(10, 10, 9, 0.06);
+  --shadow-lift-lg: 0 32px 80px -28px rgba(10, 10, 9, 0.28), 0 4px 12px -4px rgba(10, 10, 9, 0.07);
+  --shadow-hairline: 0 0 0 1px rgba(10, 10, 9, 0.09);
+  --shadow-glow: 0 0 0 1px rgba(255, 215, 0, 0.55), 0 10px 30px -10px rgba(217, 180, 0, 0.45);
+
+  /* --- Focus ------------------------------------------------------------- */
+  /* Not gold: #FFD700 on white is 1.4:1 and would be invisible. */
+  --focus-ring: var(--color-ink-950);
+  --focus-ring-inverse: var(--color-gold);
+
+  /* --- Z index ----------------------------------------------------------- */
+  --z-nav: 50;
+  --z-menu: 60;
+  --z-overlay: 70;
+  --z-toast: 80;
+
+  /* --- Runtime values written by JS -------------------------------------- */
+  --scroll-progress: 0;
+  --vh: 1vh;
+
+  color-scheme: light;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --nav-height: 5.5rem;
+  }
+}
+
+/*
+  Reduced motion collapses durations rather than removing animations, so any
+  layout that depends on an animation's end state still lands there — instantly.
+*/
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-instant: 1ms;
+    --duration-fast: 1ms;
+    --duration-base: 1ms;
+    --duration-slow: 1ms;
+    --duration-cinematic: 1ms;
+  }
+}

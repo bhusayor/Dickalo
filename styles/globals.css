@@ -1,0 +1,404 @@
+/*
+  All @import statements must precede every other rule (CSS spec, enforced by
+  postcss-import). They are inlined before Tailwind runs, so the `@layer` blocks
+  inside these files resolve against the `@tailwind` directives below.
+*/
+@import './variables.css';
+@import './fonts.css';
+@import './typography.css';
+@import './animations.css';
+@import './redesign.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-color: var(--line);
+  }
+
+  html {
+    /* Native smooth scroll is disabled: Lenis owns scrolling. Leaving both on
+       causes them to fight and produces stutter on anchor jumps. */
+    scroll-behavior: auto;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    background-color: var(--surface-base);
+    color: var(--text-primary);
+    font-family: var(--font-body-stack);
+    font-size: 1rem;
+    line-height: 1.65;
+    overflow-x: clip;
+  }
+
+  /* Locked while the mobile menu is open. */
+  body[data-scroll-locked='true'] {
+    overflow: hidden;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* One consistent focus treatment: near-black on light surfaces, gold on the
+     inverted bands. Both clear 3:1 against their ground. */
+  /*
+    Near-black, not gold. #FFD700 on white is 1.4:1 — a focus ring nobody can
+    see is worse than none, because the feature looks like it works.
+    Inverted bands opt back into gold with `.on-inverse`.
+  */
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .on-inverse :focus-visible,
+  [data-inverse] :focus-visible {
+    outline-color: var(--focus-ring-inverse);
+  }
+
+  /* Mouse users do not get a ring; keyboard users always do. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Gold selection with black text — 14.1:1, and unmistakably the brand. */
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-ink-950);
+  }
+
+  /* Scrollbar styled to match the dark ground rather than punching a light
+     stripe down the side of the page. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--surface-base);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-300);
+    border-radius: 999px;
+    border: 2px solid var(--surface-base);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-400);
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-ink-300) var(--surface-base);
+  }
+
+  /* Autofill in Chrome repaints the field white; this keeps it dark. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-primary);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-raised) inset;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: var(--color-ink-950);
+  }
+
+  /* Hide the native number spinner — no field on this site benefits from it. */
+  input[type='number']::-webkit-outer-spin-button,
+  input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Components
+   --------------------------------------------------------------------------- */
+
+@layer components {
+  /* Page container. Every section uses this so the left edge never drifts. */
+  .container-dickalo {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .section-space {
+    padding-block: var(--section-space);
+  }
+
+  /* Skip link: off-screen until focused, then pinned top-left. */
+  .skip-link {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: var(--z-toast);
+    transform: translate3d(0, -200%, 0);
+    background: var(--color-ink-950);
+    color: var(--color-gold);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: transform var(--duration-fast) var(--ease-expo);
+  }
+
+  .skip-link:focus-visible {
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Hairline divider used between sections. */
+  .rule {
+    height: 1px;
+    width: 100%;
+    background: var(--line);
+  }
+
+  /* Film grain over the hero. Very low opacity — it should read as texture,
+     never as noise. */
+  .grain-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    /* Much lighter on a white ground — overlay grain on light surfaces
+       goes muddy fast. Multiply keeps it as texture, not haze. */
+    opacity: 0.028;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Thin gold frame used on cards and media. */
+  .hairline {
+    box-shadow: inset 0 0 0 1px var(--line);
+  }
+
+  .hairline-gold {
+    box-shadow: inset 0 0 0 1px rgba(217, 180, 0, 0.55);
+  }
+
+  /* Inverted band. Anything inside flips to light-on-dark. */
+  .band-inverse {
+    background: var(--surface-inverse);
+    color: var(--text-inverse);
+  }
+
+  /* Field styling shared by input, textarea and select. */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line-strong);
+    padding: 0.875rem 0;
+    color: var(--text-primary);
+    transition:
+      border-color var(--duration-fast) var(--ease-expo),
+      background-color var(--duration-fast) var(--ease-expo);
+  }
+
+  .field::placeholder {
+    color: var(--color-ink-400);
+  }
+
+  .field:hover:not(:disabled) {
+    border-color: var(--color-ink-400);
+  }
+
+  /*
+    Focus is carried by the near-black rule plus a gold underline beneath it.
+    Gold alone on white would be almost invisible.
+  */
+  .field:focus {
+    outline: none;
+    border-color: var(--color-ink-950);
+    box-shadow: 0 1px 0 0 var(--color-gold);
+  }
+
+  .field[aria-invalid='true'] {
+    border-color: var(--color-danger);
+  }
+
+  .field:disabled {
+    color: var(--color-ink-400);
+    cursor: not-allowed;
+  }
+
+  /*
+    Drawn fallback behind the hero footage.
+
+    Sits two layers below the video and the poster, so it is only ever seen if
+    both are missing — a fresh clone with no assets, or a failed asset upload.
+    It is a setting-out grid with a house section over it, which makes an empty
+    hero look like a deliberate drawing rather than a broken <video>.
+  */
+  .bg-blueprint {
+    background-color: #f4f4f0;
+    background-image:
+      /* House outline: two roof slopes and a floor line, in gold. */
+      linear-gradient(
+        152deg,
+        transparent calc(50% - 1px),
+        rgba(217, 180, 0, 0.5) 50%,
+        transparent calc(50% + 1px)
+      ),
+      linear-gradient(
+        28deg,
+        transparent calc(50% - 1px),
+        rgba(217, 180, 0, 0.5) 50%,
+        transparent calc(50% + 1px)
+      ),
+      /* Coarse setting-out grid. */
+        linear-gradient(to right, rgba(10, 10, 9, 0.07) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 10, 9, 0.07) 1px, transparent 1px),
+      /* Fine grid. */ linear-gradient(to right, rgba(10, 10, 9, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 10, 9, 0.035) 1px, transparent 1px);
+    background-size:
+      22rem 14rem,
+      22rem 14rem,
+      8rem 8rem,
+      8rem 8rem,
+      1.6rem 1.6rem,
+      1.6rem 1.6rem;
+    background-position: center;
+  }
+
+  /* Screen-reader-only, but focusable if given tabindex. */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Utilities
+   --------------------------------------------------------------------------- */
+
+@layer utilities {
+  /* Real viewport height on mobile, where 100vh includes browser chrome that
+     later collapses. `--vh` is kept current by SmoothScrollProvider. */
+  .h-screen-safe {
+    height: 100vh;
+    height: calc(var(--vh, 1vh) * 100);
+    height: 100dvh;
+  }
+
+  .min-h-screen-safe {
+    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
+    min-height: 100dvh;
+  }
+
+  /* Multi-line truncation. */
+  .clamp-2,
+  .clamp-3,
+  .clamp-4 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .clamp-2 {
+    -webkit-line-clamp: 2;
+  }
+  .clamp-3 {
+    -webkit-line-clamp: 3;
+  }
+  .clamp-4 {
+    -webkit-line-clamp: 4;
+  }
+
+  /* Applied by GSAP before an entrance animation and removed after, so
+     content is never permanently invisible if JS fails. */
+  .js-hidden {
+    opacity: 0;
+  }
+
+  .no-js .js-hidden {
+    opacity: 1;
+  }
+
+  /* Lenis requirement: the scroll container must not be `overflow: hidden`
+     while smooth scrolling is active. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+}
+
+/* Printing a construction portfolio is a real use case — make it legible. */
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  .band-inverse {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  header,
+  footer,
+  video,
+  canvas,
+  .no-print {
+    display: none !important;
+  }
+
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.75em;
+  }
+}

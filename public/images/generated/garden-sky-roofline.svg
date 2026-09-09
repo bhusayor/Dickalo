@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" width="1536" height="1024">
+  <!-- Layout mask registered to nigerian-garden-sky.webp. Follow the roofline,
+       then fill the house and foreground so the wordmark stays behind them. -->
+  <path fill="white" d="M0 625H358V591L374 586V499L469 479V458L787 388L817 398L869 382V362L1277 270L1395 441V462L1368 467V533L1431 533L1463 574V591H1536V1024H0Z"/>
+</svg>

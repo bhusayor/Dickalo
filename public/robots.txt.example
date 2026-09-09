@@ -1,0 +1,26 @@
+# This file is generated at runtime by app/robots.ts — it is here only as a
+# reference for what that route emits. Do not create a real robots.txt in
+# /public; a static file would shadow the dynamic route and the sitemap URL
+# would stop tracking the deployed domain.
+
+User-agent: *
+Allow: /
+Disallow: /studio
+Disallow: /api
+Disallow: /contact/thank-you
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+Sitemap: https://dickalo.com/sitemap.xml
+Sitemap: https://dickalo.com/sitemap-static.xml
+Host: https://dickalo.com

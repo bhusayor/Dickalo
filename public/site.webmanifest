@@ -1,0 +1,12 @@
+{
+  "name": "DICKALO — Architecture & Construction",
+  "short_name": "DICKALO",
+  "description": "Architecture and construction studio in Lagos, Nigeria.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F6F5F0",
+  "theme_color": "#F6F5F0",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

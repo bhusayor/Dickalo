@@ -1,0 +1,166 @@
+/* ---------------------------------------------------------------------------
+   Typography.
+
+   DM Sans sets headlines, Plus Jakarta Sans sets body. Both load through
+   next/font in `app/layout.tsx`, which self-hosts them and emits the
+   `--font-display` / `--font-body` variables referenced here.
+   --------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    font-family: var(--font-body-stack);
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display-stack);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  /* Optical correction: tight tracking looks wrong at small sizes. */
+  h4,
+  h5,
+  h6 {
+    letter-spacing: -0.01em;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+}
+
+@layer components {
+  /* --- Editorial helpers -------------------------------------------------- */
+
+  /* Small uppercase label above a heading. Never a heading itself. */
+  /* Uses --text-accent (darkened gold), never --color-gold. On white the
+     brand gold measures 1.4:1 and an eyebrow in it is unreadable. */
+  .eyebrow {
+    font-family: var(--font-body-stack);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-accent);
+  }
+
+  .eyebrow--muted {
+    color: var(--text-muted);
+  }
+
+  /* Body copy at a comfortable measure. */
+  .prose-dickalo {
+    max-width: 68ch;
+    color: var(--text-secondary);
+    font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
+    line-height: 1.7;
+  }
+
+  .prose-dickalo > * + * {
+    margin-top: 1.25em;
+  }
+
+  .prose-dickalo h2 {
+    margin-top: 2em;
+    color: var(--text-primary);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    line-height: 1.2;
+  }
+
+  .prose-dickalo h3 {
+    margin-top: 1.75em;
+    color: var(--text-primary);
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    line-height: 1.3;
+  }
+
+  .prose-dickalo strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  .prose-dickalo a {
+    color: var(--text-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+    transition: opacity var(--duration-fast) var(--ease-expo);
+  }
+
+  .prose-dickalo a:hover {
+    opacity: 0.75;
+  }
+
+  .prose-dickalo ul,
+  .prose-dickalo ol {
+    padding-left: 1.25em;
+  }
+
+  .prose-dickalo ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .prose-dickalo ul > li {
+    position: relative;
+    padding-left: 1.5em;
+  }
+
+  /* Gold rule instead of a bullet — reads as a drawing tick. */
+  .prose-dickalo ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    width: 0.75em;
+    height: 1px;
+    background: var(--color-gold-deep);
+  }
+
+  .prose-dickalo ol {
+    list-style: decimal;
+  }
+
+  .prose-dickalo blockquote {
+    border-left: 2px solid var(--color-gold-deep);
+    padding-left: 1.25em;
+    font-family: var(--font-display-stack);
+    font-size: 1.15em;
+    line-height: 1.45;
+    color: var(--text-primary);
+  }
+
+  .prose-dickalo figure figcaption {
+    margin-top: 0.75em;
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+  }
+
+  /* Tabular figures for stats and specification tables. */
+  .numeric {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  /* Gold gradient applied to a word inside a headline. */
+  /* Darker stops than the dark-theme version so the gradient stays legible
+     as text on white. */
+  .text-gold-gradient {
+    background: linear-gradient(100deg, #a88c00 0%, #d9b400 45%, #7a6600 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
