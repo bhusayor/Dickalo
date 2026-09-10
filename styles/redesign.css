@@ -1329,21 +1329,13 @@ address {
 }
 .hero-stage-shell {
   z-index: 2;
-  clip-path: inset(0 100% 0 0);
+  clip-path: inset(100% 0 0);
   will-change: clip-path;
 }
 .hero-stage-complete {
-  --reveal: 100%;
   z-index: 3;
-  mask-image: linear-gradient(110deg, #000 38%, transparent 62%);
-  -webkit-mask-image: linear-gradient(110deg, #000 38%, transparent 62%);
-  mask-size: 350% 100%;
-  -webkit-mask-size: 350% 100%;
-  mask-position: var(--reveal) 0;
-  -webkit-mask-position: var(--reveal) 0;
-  mask-repeat: no-repeat;
-  -webkit-mask-repeat: no-repeat;
-  will-change: mask-position;
+  clip-path: inset(100% 0 0);
+  will-change: clip-path;
 }
 .hero-build-scan {
   position: absolute;
@@ -1687,7 +1679,7 @@ address {
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-stage-complete {
-    --reveal: 0% !important;
+    clip-path: inset(0) !important;
   }
   .hero-stage-structure,
   .hero-stage-shell {
@@ -2065,7 +2057,7 @@ address {
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-scroll-track {
-    height: 300svh;
+    height: 360svh;
   }
   .hero-scroll-track .architecture-hero {
     position: sticky;
@@ -2086,7 +2078,7 @@ address {
 }
 @media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
   .hero-scroll-track {
-    height: 260svh;
+    height: 320svh;
   }
 }
 @media (max-height: 780px) and (prefers-reduced-motion: no-preference) {

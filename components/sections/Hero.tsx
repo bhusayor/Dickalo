@@ -33,7 +33,7 @@ export function Hero() {
               trigger: track.current,
               start: 'top top',
               end: 'bottom bottom',
-              scrub: 0.6,
+              scrub: true,
               invalidateOnRefresh: true,
             },
             onUpdate: () => {
@@ -59,28 +59,28 @@ export function Hero() {
             .fromTo(
               '.hero-stage-structure',
               { clipPath: 'inset(100% 0% 0% 0%)' },
-              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.28, ease: 'power1.inOut' },
+              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.28 },
               0.05,
             )
             .fromTo(
               '.hero-stage-shell',
-              { clipPath: 'inset(0% 100% 0% 0%)' },
-              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.3, ease: 'power1.inOut' },
+              { clipPath: 'inset(100% 0% 0% 0%)' },
+              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.3 },
               0.3,
             )
             .fromTo(
               '.hero-stage-complete',
-              { '--reveal': '100%' },
-              { '--reveal': '0%', duration: 0.35, ease: 'power1.inOut' },
+              { clipPath: 'inset(100% 0% 0% 0%)' },
+              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.35 },
               0.6,
             )
             .fromTo(
               '.hero-build-scan',
               { yPercent: 0, autoAlpha: 0 },
-              { yPercent: -225, autoAlpha: 0.7, duration: 0.5, ease: 'power1.inOut' },
-              0.06,
+              { yPercent: -225, autoAlpha: 0.7, duration: 0.9 },
+              0.05,
             )
-            .to('.hero-build-scan', { autoAlpha: 0, duration: 0.12 }, 0.57)
+            .to('.hero-build-scan', { autoAlpha: 0, duration: 0.05 }, 0.95)
             .fromTo('.hero-atmosphere', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.68)
             .fromTo(
               '[data-hero-line]',
@@ -245,8 +245,7 @@ export function Hero() {
         <noscript>
           <style>{`
           .hero-scroll-track { height: auto !important; }
-          .hero-stage-structure, .hero-stage-shell { clip-path: inset(0) !important; }
-          .hero-stage-complete { --reveal: 0%; }
+          .hero-stage-structure, .hero-stage-shell, .hero-stage-complete { clip-path: inset(0) !important; }
           .hero-scroll-track [data-hero-line] { transform: none; opacity: 1; }
           .hero-scroll-track .hero-overline, .hero-scroll-track .hero-bottom-row { opacity: 1; visibility: visible; }
         `}</style>
