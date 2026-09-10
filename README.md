@@ -32,7 +32,7 @@ the browser — never put a secret behind that prefix.
 | `NEXT_PUBLIC_SITE_URL` | Canonical URLs, OG tags, sitemap | Your domain, no trailing slash |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | CMS content | sanity.io/manage |
 | `NEXT_PUBLIC_SANITY_DATASET` | CMS content | Usually `production` |
-| `NEXT_PUBLIC_SANITY_API_VERSION` | CMS content | Leave at `2024-10-01` |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | CMS content | Use exactly `2024-10-01`, or omit it to use that default |
 | `SANITY_API_READ_TOKEN` | Draft previews only | Sanity → API → Tokens, Viewer role |
 | `NEXT_PUBLIC_SUPABASE_URL` | Forms | Supabase → Settings → API |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Forms | Same page |

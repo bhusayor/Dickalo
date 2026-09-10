@@ -12,13 +12,33 @@ import { createClient, type SanityClient } from 'next-sanity';
  * a clone without credentials still renders a complete site.
  */
 
-export const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID ?? '';
-export const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET ?? 'production';
-export const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION ?? '2024-10-01';
+const DEFAULT_DATASET = 'production';
+const DEFAULT_API_VERSION = '2024-10-01';
+
+/**
+ * Vercel treats an environment variable that exists with an empty value as an
+ * empty string. Nullish coalescing does not catch that case, and Sanity throws
+ * while this module is imported, before the site's fallback content can run.
+ * Normalize public CMS settings before creating the client so an incomplete
+ * optional CMS setup can never stop a production build.
+ */
+const configuredProjectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID?.trim() ?? '';
+const configuredDataset = process.env.NEXT_PUBLIC_SANITY_DATASET?.trim() ?? '';
+const configuredApiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION?.trim() ?? '';
+
+const isValidApiVersion = (value: string) => value === '1' || /^\d{4}-\d{2}-\d{2}$/.test(value);
+const isValidDataset = (value: string) => /^[a-z0-9][a-z0-9_-]*$/.test(value);
+const isValidProjectId = (value: string) =>
+  value !== 'your_project_id' && /^[a-z0-9][a-z0-9-]*$/.test(value);
+
+export const projectId = isValidProjectId(configuredProjectId) ? configuredProjectId : '';
+export const dataset = isValidDataset(configuredDataset) ? configuredDataset : DEFAULT_DATASET;
+export const apiVersion = isValidApiVersion(configuredApiVersion)
+  ? configuredApiVersion
+  : DEFAULT_API_VERSION;
 
 /** True only when a real project id is present. */
-export const isSanityConfigured =
-  projectId.length > 0 && projectId !== 'your_project_id';
+export const isSanityConfigured = projectId.length > 0;
 
 export const sanityClient: SanityClient = createClient({
   projectId: projectId || 'placeholder',

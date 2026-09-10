@@ -4,7 +4,11 @@
   "private": true,
   "description": "DICKALO — architecture and construction studio, Lagos, Nigeria.",
   "engines": {
-    "node": ">=18.17.0"
+    "node": "22.x"
+  },
+  "allowScripts": {
+    "esbuild@0.25.6": true,
+    "unrs-resolver@1.12.2": true
   },
   "scripts": {
     "dev": "next dev",
@@ -27,7 +31,7 @@
     "framer-motion": "^11.5.6",
     "gsap": "^3.12.5",
     "lenis": "^1.1.13",
-    "next": "14.2.15",
+    "next": "14.2.35",
     "next-sanity": "^9.5.0",
     "next-seo": "^6.6.0",
     "next-sitemap": "^4.2.3",
@@ -48,7 +52,7 @@
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.1",
-    "eslint-config-next": "14.2.15",
+    "eslint-config-next": "14.2.35",
     "postcss": "^8.4.47",
     "postcss-import": "^17.0.0",
     "prettier": "^3.3.3",
