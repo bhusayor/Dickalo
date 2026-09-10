@@ -29,7 +29,7 @@ the browser — never put a secret behind that prefix.
 
 | Variable | Required for | Where to get it |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Canonical URLs, OG tags, sitemap | Your domain, no trailing slash |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URLs, OG tags, sitemap | Full `https://` URL, or omit it to use `https://dickalo.com` |
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | CMS content | sanity.io/manage |
 | `NEXT_PUBLIC_SANITY_DATASET` | CMS content | Usually `production` |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | CMS content | Use exactly `2024-10-01`, or omit it to use that default |

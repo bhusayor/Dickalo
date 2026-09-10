@@ -68,10 +68,11 @@
     one less font to download.
 
     Order matters: Trueno if the files are present, the size-adjusted fallback
-    next, then the next/font-hosted Plus Jakarta Sans, then system.
+    next, then the local system stack.
   */
   --font-sans-stack:
-    'Trueno', 'Trueno Fallback', var(--font-body), system-ui, -apple-system, 'Segoe UI', sans-serif;
+    'Trueno', 'Trueno Fallback', 'Helvetica Neue', Arial, system-ui, -apple-system, 'Segoe UI',
+    sans-serif;
 
   /* Kept as aliases so existing rules do not all have to change at once. */
   --font-display-stack: var(--font-sans-stack);

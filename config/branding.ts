@@ -61,9 +61,9 @@ export const colors = {
 export const fonts = {
   /** The site is set in Trueno; see public/fonts/README.md. */
   family: 'Trueno',
-  /** Rendered until Trueno's files are added. Self-hosted by next/font. */
-  fallback: 'Plus Jakarta Sans',
-  stack: "'Trueno', 'Trueno Fallback', var(--font-body), system-ui, sans-serif",
+  /** Rendered until Trueno's files are added. */
+  fallback: 'Helvetica Neue',
+  stack: "'Trueno', 'Trueno Fallback', 'Helvetica Neue', Arial, system-ui, sans-serif",
 } as const;
 
 /**

@@ -126,9 +126,16 @@ const config: Config = {
         // One family. `display` and `body` both resolve to Trueno; the two
         // names are kept so components read intentionally, not because the
         // typefaces differ.
-        sans: ['Trueno', 'Trueno Fallback', 'var(--font-body)', 'system-ui', 'sans-serif'],
-        display: ['Trueno', 'Trueno Fallback', 'var(--font-body)', 'system-ui', 'sans-serif'],
-        body: ['Trueno', 'Trueno Fallback', 'var(--font-body)', 'system-ui', 'sans-serif'],
+        sans: ['Trueno', 'Trueno Fallback', 'Helvetica Neue', 'Arial', 'system-ui', 'sans-serif'],
+        display: [
+          'Trueno',
+          'Trueno Fallback',
+          'Helvetica Neue',
+          'Arial',
+          'system-ui',
+          'sans-serif',
+        ],
+        body: ['Trueno', 'Trueno Fallback', 'Helvetica Neue', 'Arial', 'system-ui', 'sans-serif'],
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
 

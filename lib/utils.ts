@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { breakpoints } from '@/config/branding';
+import { siteUrl } from '@/config/site';
 
 /**
  * Merge Tailwind classes safely. `clsx` handles conditionals, `twMerge` makes
@@ -112,7 +113,13 @@ export const clamp = (value: number, min: number, max: number): number =>
 export const lerp = (start: number, end: number, t: number): number => start + (end - start) * t;
 
 /** Remap a value from one range to another, clamped to the output range. */
-export function mapRange(value: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
+export function mapRange(
+  value: number,
+  inMin: number,
+  inMax: number,
+  outMin: number,
+  outMax: number,
+): number {
   if (inMax === inMin) return outMin;
   const t = clamp((value - inMin) / (inMax - inMin), 0, 1);
   return outMin + t * (outMax - outMin);
@@ -145,7 +152,10 @@ export function isBelow(bp: keyof typeof breakpoints): boolean {
  */
 export function isLowPoweredDevice(): boolean {
   if (!isBrowser()) return false;
-  const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+  const nav = navigator as Navigator & {
+    deviceMemory?: number;
+    connection?: { saveData?: boolean };
+  };
   if (nav.connection?.saveData) return true;
   if (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4) return true;
   if (typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 4) return true;
@@ -157,9 +167,8 @@ export function isLowPoweredDevice(): boolean {
 // ---------------------------------------------------------------------------
 
 export function absoluteUrl(path = ''): string {
-  const base = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dickalo.com').replace(/\/$/, '');
-  if (!path) return base;
-  return `${base}${path.startsWith('/') ? path : `/${path}`}`;
+  if (!path) return siteUrl;
+  return `${siteUrl}${path.startsWith('/') ? path : `/${path}`}`;
 }
 
 export function isExternalLink(href: string): boolean {

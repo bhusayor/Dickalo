@@ -6,6 +6,29 @@
  * written twice in two slightly different ways.
  */
 
+const DEFAULT_SITE_URL = 'https://dickalo.com';
+
+/**
+ * Metadata is evaluated while Next.js collects every route. Normalize the
+ * dashboard value here so an empty or malformed URL cannot stop that build.
+ */
+function resolveSiteUrl(value: string | undefined): string {
+  const candidate = value?.trim();
+  if (!candidate) return DEFAULT_SITE_URL;
+
+  try {
+    const url = new URL(candidate);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return DEFAULT_SITE_URL;
+    url.hash = '';
+    url.search = '';
+    return url.toString().replace(/\/$/, '');
+  } catch {
+    return DEFAULT_SITE_URL;
+  }
+}
+
+export const siteUrl = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+
 export const siteConfig = {
   name: 'DICKALO',
   legalName: 'DICKALO Architecture & Construction Ltd.',
@@ -15,7 +38,7 @@ export const siteConfig = {
   description:
     'DICKALO is a Nigerian architecture and construction firm. We design buildings, we build them, and we hand over on the date we promised — in Lagos, Abuja, Port Harcourt and beyond.',
   shortDescription: 'Architecture and construction firm working across Nigeria.',
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dickalo.com',
+  url: siteUrl,
   locale: 'en_NG',
   language: 'en-NG',
   founded: '2011',
@@ -60,7 +83,13 @@ export const siteConfig = {
   hours: {
     label: 'Monday to Friday, 8:30am – 6:00pm WAT',
     /** schema.org openingHours format. */
-    spec: [{ days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '08:30', closes: '18:00' }],
+    spec: [
+      {
+        days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        opens: '08:30',
+        closes: '18:00',
+      },
+    ],
   },
 
   socials: [
@@ -74,16 +103,7 @@ export const siteConfig = {
    * States we have actually built in. Used in the footer and in JSON-LD.
    * Listing somewhere we have never worked is the kind of claim a client checks.
    */
-  serviceAreas: [
-    'Lagos',
-    'Abuja (FCT)',
-    'Rivers',
-    'Enugu',
-    'Kano',
-    'Oyo',
-    'Delta',
-    'Akwa Ibom',
-  ],
+  serviceAreas: ['Lagos', 'Abuja (FCT)', 'Rivers', 'Enugu', 'Kano', 'Oyo', 'Delta', 'Akwa Ibom'],
 
   /** Shown wherever we need to say "national" without listing eight states. */
   coverage: 'Lagos, Abuja, Port Harcourt and across Nigeria',

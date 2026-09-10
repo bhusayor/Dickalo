@@ -1,10 +1,9 @@
-/* Local editorial fallback. Keep the existing metrics while avoiding requests
-   for Trueno files that are not included in the repository. Plus Jakarta Sans
-   remains self-hosted by next/font as the final webfont fallback. */
+/* Local editorial stack. Keep the existing metrics without a build-time or
+   browser request to a third-party font server. */
 
 @font-face {
   font-family: 'Trueno Fallback';
-  src: local('Plus Jakarta Sans'), local('Helvetica Neue'), local('Arial');
+  src: local('Helvetica Neue'), local('Arial');
   size-adjust: 97%;
   ascent-override: 96%;
   descent-override: 24%;

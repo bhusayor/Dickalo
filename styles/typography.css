@@ -1,15 +1,17 @@
 /* ---------------------------------------------------------------------------
    Typography.
 
-   DM Sans sets headlines, Plus Jakarta Sans sets body. Both load through
-   next/font in `app/layout.tsx`, which self-hosts them and emits the
-   `--font-display` / `--font-body` variables referenced here.
+   Trueno sets both headlines and body copy when its local files are present.
+   A metric-adjusted local system stack keeps rendering predictable otherwise.
    --------------------------------------------------------------------------- */
 
 @layer base {
   html {
     font-family: var(--font-body-stack);
-    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    font-feature-settings:
+      'kern' 1,
+      'liga' 1,
+      'calt' 1;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

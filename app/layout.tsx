@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
 import type { ReactNode } from 'react';
 
 import { Footer } from '@/components/layout/Footer';
@@ -10,16 +9,6 @@ import { defaultMetadata, defaultViewport } from './metadata';
 
 import '@/styles/globals.css';
 
-/** Self-hosted webfont fallback for the local architectural sans-serif stack. */
-const fontFallback = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-body',
-  display: 'swap',
-  adjustFontFallback: true,
-  preload: true,
-});
-
 export const metadata: Metadata = defaultMetadata;
 export const viewport: Viewport = defaultViewport;
 
@@ -27,7 +16,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en-NG"
-      className={fontFallback.variable}
       // Lenis writes classes onto <html>, and browser extensions add attributes
       // there too. Both would otherwise be reported as hydration mismatches.
       suppressHydrationWarning

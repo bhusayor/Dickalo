@@ -1,3 +1,15 @@
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+let siteUrl = 'https://dickalo.com';
+
+try {
+  const candidate = configuredSiteUrl ? new URL(configuredSiteUrl) : null;
+  if (candidate && ['http:', 'https:'].includes(candidate.protocol)) {
+    siteUrl = candidate.toString().replace(/\/$/, '');
+  }
+} catch {
+  // Keep the production fallback when a deployment value is malformed.
+}
+
 /**
  * next-sitemap runs after `next build` and writes a static sitemap alongside
  * the App Router's dynamic one. Belt and braces: if the CMS is unreachable at
@@ -13,7 +25,7 @@
  */
 module.exports = {
   sourceDir: process.env.NEXT_DIST_DIR || '.next',
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || 'https://dickalo.com',
+  siteUrl,
   generateRobotsTxt: false,
   generateIndexSitemap: false,
   sitemapBaseFileName: 'sitemap-static',
