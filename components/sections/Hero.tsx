@@ -29,7 +29,7 @@ export function Hero() {
           const story = gsap.timeline({
             defaults: { ease: 'none' },
             scrollTrigger: {
-              id: 'hero-restoration',
+              id: 'hero-construction',
               trigger: track.current,
               start: 'top top',
               end: 'bottom bottom',
@@ -41,11 +41,11 @@ export function Hero() {
               section.current?.setAttribute('data-hero-progress', progress.toFixed(3));
               section.current?.setAttribute(
                 'data-hero-state',
-                progress < 0.22
+                progress < 0.215
                   ? 'foundation'
-                  : progress < 0.48
+                  : progress < 0.455
                     ? 'structure'
-                    : progress < 0.74
+                    : progress < 0.715
                       ? 'enclosure'
                       : 'complete',
               );
@@ -54,51 +54,43 @@ export function Hero() {
           reveal.current = story;
           section.current?.setAttribute('data-hero-state', 'foundation');
           section.current?.setAttribute('data-hero-progress', '0');
+          gsap.set('.hero-stage-foundation', { autoAlpha: 1 });
+          gsap.set(['.hero-stage-structure', '.hero-stage-shell', '.hero-stage-complete'], {
+            autoAlpha: 0,
+          });
+          gsap.set('.hero-transition-curtain', { autoAlpha: 0 });
           story
             .fromTo('[data-hero-image]', { scale: 1.075 }, { scale: 1, duration: 1 }, 0)
-            .fromTo(
-              '.hero-stage-structure',
-              { clipPath: 'inset(100% 0% 0% 0%)' },
-              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.28 },
-              0.05,
-            )
-            .fromTo(
-              '.hero-stage-shell',
-              { clipPath: 'inset(100% 0% 0% 0%)' },
-              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.3 },
-              0.3,
-            )
-            .fromTo(
-              '.hero-stage-complete',
-              { clipPath: 'inset(100% 0% 0% 0%)' },
-              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.35 },
-              0.6,
-            )
-            .fromTo(
-              '.hero-build-scan',
-              { yPercent: 0, autoAlpha: 0 },
-              { yPercent: -225, autoAlpha: 0.7, duration: 0.9 },
-              0.05,
-            )
-            .to('.hero-build-scan', { autoAlpha: 0, duration: 0.05 }, 0.95)
-            .fromTo('.hero-atmosphere', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.68)
+            .to('.hero-transition-curtain', { autoAlpha: 1, duration: 0.035 }, 0.18)
+            .set('.hero-stage-foundation', { autoAlpha: 0 }, 0.215)
+            .set('.hero-stage-structure', { autoAlpha: 1 }, 0.215)
+            .to('.hero-transition-curtain', { autoAlpha: 0, duration: 0.035 }, 0.215)
+            .to('.hero-transition-curtain', { autoAlpha: 1, duration: 0.035 }, 0.42)
+            .set('.hero-stage-structure', { autoAlpha: 0 }, 0.455)
+            .set('.hero-stage-shell', { autoAlpha: 1 }, 0.455)
+            .to('.hero-transition-curtain', { autoAlpha: 0, duration: 0.035 }, 0.455)
+            .to('.hero-transition-curtain', { autoAlpha: 1, duration: 0.035 }, 0.68)
+            .set('.hero-stage-shell', { autoAlpha: 0 }, 0.715)
+            .set('.hero-stage-complete', { autoAlpha: 1 }, 0.715)
+            .to('.hero-transition-curtain', { autoAlpha: 0, duration: 0.035 }, 0.715)
+            .fromTo('.hero-atmosphere', { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0.73)
             .fromTo(
               '[data-hero-line]',
               { y: 0, yPercent: 110, opacity: 0 },
               { y: 0, yPercent: 0, opacity: 1, duration: 0.28, stagger: 0.1, ease: 'power2.out' },
-              0.43,
+              0.52,
             )
             .fromTo(
               '.hero-overline',
               { y: 18, autoAlpha: 0 },
               { y: 0, autoAlpha: 1, duration: 0.25 },
-              0.4,
+              0.5,
             )
             .fromTo(
               '.hero-bottom-row',
               { y: 24, autoAlpha: 0 },
               { y: 0, autoAlpha: 1, duration: 0.28 },
-              0.7,
+              0.76,
             );
           ScrollTrigger.refresh();
         }, section);
@@ -197,7 +189,7 @@ export function Hero() {
             </div>
           </div>
         </div>
-        <div className="hero-build-scan" aria-hidden="true" />
+        <div className="hero-transition-curtain" aria-hidden="true" />
         <div className="hero-atmosphere" aria-hidden="true" />
         <div className="hero-scrim" />
         <div className="hero-grid" aria-hidden="true" />
@@ -245,7 +237,8 @@ export function Hero() {
         <noscript>
           <style>{`
           .hero-scroll-track { height: auto !important; }
-          .hero-stage-structure, .hero-stage-shell, .hero-stage-complete { clip-path: inset(0) !important; }
+          .hero-stage-foundation, .hero-stage-structure, .hero-stage-shell { display: none !important; }
+          .hero-stage-complete { opacity: 1 !important; visibility: visible !important; }
           .hero-scroll-track [data-hero-line] { transform: none; opacity: 1; }
           .hero-scroll-track .hero-overline, .hero-scroll-track .hero-bottom-row { opacity: 1; visibility: visible; }
         `}</style>
