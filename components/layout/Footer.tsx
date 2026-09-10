@@ -108,8 +108,8 @@ export function Footer() {
       <div className="footer-landscape">
         <NextImage
           className="footer-landscape-background"
-          src="/images/generated/nigerian-garden-sky.webp"
-          alt="Modern Nigerian garden-home concept with cream stone, shaded balconies, lush green lawns and flowering tropical plants beneath a bright blue sky"
+          src="/images/generated/nigerian-garden-sky-v2.webp"
+          alt="Contemporary Nigerian garden residence with pale stone, shaded verandas and tropical planting beneath a generous blue morning sky"
           fill
           sizes="100vw"
           quality={90}
@@ -120,7 +120,7 @@ export function Footer() {
         </div>
         <NextImage
           className="footer-landscape-building"
-          src="/images/generated/nigerian-garden-sky.webp"
+          src="/images/generated/nigerian-garden-sky-v2.webp"
           alt=""
           aria-hidden="true"
           fill

@@ -1,7 +1,7 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 import { Container } from '@/components/common/Container';
 import { Button } from '@/components/common/Button';
 import { Image } from '@/components/common/Image';
@@ -19,17 +19,31 @@ const portraits = [
 ];
 
 export function Testimonials({ testimonials }: TestimonialsProps) {
+  const section = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(0);
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const reduce = useReducedMotion();
+  const isInView = useInView(section, { amount: 0.2 });
+  const activeIndex = testimonials.length ? index % testimonials.length : 0;
+
+  useEffect(() => {
+    if (reduce || !isInView || testimonials.length < 2) return;
+
+    const timer = window.setTimeout(() => {
+      setIndex((current) => (current + 1) % testimonials.length);
+    }, 10_000);
+
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, isInView, reduce, testimonials.length]);
+
   if (!testimonials.length) return null;
-  const activeIndex = index % testimonials.length;
   const active = testimonials[activeIndex];
   const isIllustrative = !active.image?.asset?._ref;
   const goTo = (next: number) => setIndex((next + testimonials.length) % testimonials.length);
 
   return (
     <section
+      ref={section}
       id="testimonials"
       className="section-space client-section"
       aria-labelledby="client-heading"
@@ -152,6 +166,21 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                     tabIndex={activeIndex === i ? 0 : -1}
                     onClick={() => goTo(i)}
                   >
+                    <svg className="client-avatar-progress" viewBox="0 0 52 52" aria-hidden="true">
+                      <circle className="client-avatar-progress-track" cx="26" cy="26" r="24" />
+                      {activeIndex === i && (isInView || reduce) && (
+                        <circle
+                          className={
+                            reduce
+                              ? 'client-avatar-progress-complete'
+                              : 'client-avatar-progress-ring'
+                          }
+                          cx="26"
+                          cy="26"
+                          r="24"
+                        />
+                      )}
+                    </svg>
                     <Image
                       source={item.image}
                       src={portraits[i % portraits.length]}

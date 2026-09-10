@@ -41,39 +41,64 @@ export function Hero() {
               section.current?.setAttribute('data-hero-progress', progress.toFixed(3));
               section.current?.setAttribute(
                 'data-hero-state',
-                progress < 0.02 ? 'potential' : progress < 0.9 ? 'transforming' : 'alive',
+                progress < 0.22
+                  ? 'foundation'
+                  : progress < 0.48
+                    ? 'structure'
+                    : progress < 0.74
+                      ? 'enclosure'
+                      : 'complete',
               );
             },
           });
           reveal.current = story;
-          section.current?.setAttribute('data-hero-state', 'potential');
+          section.current?.setAttribute('data-hero-state', 'foundation');
           section.current?.setAttribute('data-hero-progress', '0');
           story
             .fromTo('[data-hero-image]', { scale: 1.075 }, { scale: 1, duration: 1 }, 0)
             .fromTo(
-              '.hero-after',
+              '.hero-stage-structure',
+              { clipPath: 'inset(100% 0% 0% 0%)' },
+              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.28, ease: 'power1.inOut' },
+              0.05,
+            )
+            .fromTo(
+              '.hero-stage-shell',
+              { clipPath: 'inset(0% 100% 0% 0%)' },
+              { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.3, ease: 'power1.inOut' },
+              0.3,
+            )
+            .fromTo(
+              '.hero-stage-complete',
               { '--reveal': '100%' },
-              { '--reveal': '0%', duration: 0.78, ease: 'power1.inOut' },
+              { '--reveal': '0%', duration: 0.35, ease: 'power1.inOut' },
+              0.6,
+            )
+            .fromTo(
+              '.hero-build-scan',
+              { yPercent: 0, autoAlpha: 0 },
+              { yPercent: -225, autoAlpha: 0.7, duration: 0.5, ease: 'power1.inOut' },
               0.06,
             )
-            .fromTo('.hero-atmosphere', { opacity: 0 }, { opacity: 1, duration: 0.6 }, 0.2)
+            .to('.hero-build-scan', { autoAlpha: 0, duration: 0.12 }, 0.57)
+            .fromTo('.hero-atmosphere', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.68)
             .fromTo(
               '[data-hero-line]',
               { y: 0, yPercent: 110, opacity: 0 },
-              { y: 0, yPercent: 0, opacity: 1, duration: 0.38, stagger: 0.12, ease: 'power2.out' },
-              0.1,
+              { y: 0, yPercent: 0, opacity: 1, duration: 0.28, stagger: 0.1, ease: 'power2.out' },
+              0.43,
             )
             .fromTo(
               '.hero-overline',
               { y: 18, autoAlpha: 0 },
               { y: 0, autoAlpha: 1, duration: 0.25 },
-              0.15,
+              0.4,
             )
             .fromTo(
               '.hero-bottom-row',
               { y: 24, autoAlpha: 0 },
               { y: 0, autoAlpha: 1, duration: 0.28 },
-              0.42,
+              0.7,
             );
           ScrollTrigger.refresh();
         }, section);
@@ -129,9 +154,9 @@ export function Hero() {
         <div className="hero-media">
           <div className="hero-camera">
             <div className="hero-image" data-hero-image>
-              <div className="hero-before">
+              <div className="hero-stage hero-stage-foundation">
                 <NextImage
-                  src="/images/generated/courtyard-before.webp"
+                  src="/images/generated/courtyard-foundation.webp"
                   alt=""
                   fill
                   priority
@@ -139,12 +164,32 @@ export function Hero() {
                   quality={88}
                 />
               </div>
-              <div className="hero-after">
+              <div className="hero-stage hero-stage-structure">
+                <NextImage
+                  src="/images/generated/courtyard-structure.webp"
+                  alt=""
+                  fill
+                  loading="eager"
+                  sizes={imageSizes}
+                  quality={88}
+                />
+              </div>
+              <div className="hero-stage hero-stage-shell">
+                <NextImage
+                  src="/images/generated/courtyard-before.webp"
+                  alt=""
+                  fill
+                  loading="eager"
+                  sizes={imageSizes}
+                  quality={88}
+                />
+              </div>
+              <div className="hero-stage hero-stage-complete">
                 <NextImage
                   src="/images/generated/courtyard-residence.webp"
-                  alt="Architectural concept transforming a desolate courtyard house into a warm, landscaped residence"
+                  alt="A modern Nigerian courtyard residence progressing from its foundations to a completed, landscaped home"
                   fill
-                  priority
+                  loading="eager"
                   sizes={imageSizes}
                   quality={90}
                 />
@@ -152,6 +197,7 @@ export function Hero() {
             </div>
           </div>
         </div>
+        <div className="hero-build-scan" aria-hidden="true" />
         <div className="hero-atmosphere" aria-hidden="true" />
         <div className="hero-scrim" />
         <div className="hero-grid" aria-hidden="true" />
@@ -193,13 +239,14 @@ export function Hero() {
               else scrollTo('#studio-intro', -90);
             }}
           >
-            <span aria-hidden="true">↓</span> Scroll to bring it to life
+            <span aria-hidden="true">↓</span> Scroll to build it
           </button>
         </div>
         <noscript>
           <style>{`
           .hero-scroll-track { height: auto !important; }
-          .hero-after { --reveal: 0%; }
+          .hero-stage-structure, .hero-stage-shell { clip-path: inset(0) !important; }
+          .hero-stage-complete { --reveal: 0%; }
           .hero-scroll-track [data-hero-line] { transform: none; opacity: 1; }
           .hero-scroll-track .hero-overline, .hero-scroll-track .hero-bottom-row { opacity: 1; visibility: visible; }
         `}</style>

@@ -1311,18 +1311,30 @@ address {
   inset: 0;
   z-index: auto;
 }
-.hero-before,
-.hero-after {
+.hero-stage {
   position: absolute;
   inset: 0;
 }
-.hero-before img,
-.hero-after img {
+.hero-stage img {
   object-fit: cover;
   object-position: center 58%;
 }
-.hero-after {
+.hero-stage-foundation {
+  z-index: 0;
+}
+.hero-stage-structure {
+  z-index: 1;
+  clip-path: inset(100% 0 0);
+  will-change: clip-path;
+}
+.hero-stage-shell {
+  z-index: 2;
+  clip-path: inset(0 100% 0 0);
+  will-change: clip-path;
+}
+.hero-stage-complete {
   --reveal: 100%;
+  z-index: 3;
   mask-image: linear-gradient(110deg, #000 38%, transparent 62%);
   -webkit-mask-image: linear-gradient(110deg, #000 38%, transparent 62%);
   mask-size: 350% 100%;
@@ -1331,6 +1343,21 @@ address {
   -webkit-mask-position: var(--reveal) 0;
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
+  will-change: mask-position;
+}
+.hero-build-scan {
+  position: absolute;
+  z-index: -1;
+  inset: 100% 0 auto;
+  height: 44%;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent, rgb(235 202 122 / 8%) 70%, rgb(235 202 122 / 28%)),
+    linear-gradient(90deg, transparent 8%, rgb(255 255 255 / 11%) 8.1%, transparent 8.2%);
+  border-top: 1px solid rgb(235 202 122 / 80%);
+  box-shadow: 0 -10px 30px rgb(235 202 122 / 12%);
+  will-change: transform, opacity;
 }
 .hero-atmosphere {
   position: absolute;
@@ -1487,11 +1514,12 @@ address {
   gap: 9px;
 }
 .client-portrait-tabs > button {
-  width: 47px;
-  height: 47px;
+  position: relative;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
-  padding: 3px;
-  border: 1px solid transparent;
+  padding: 5px;
+  border: 0;
   opacity: 0.6;
   transition:
     opacity 0.25s,
@@ -1509,11 +1537,44 @@ address {
 }
 .client-portrait-tabs > button[aria-selected='true'] {
   opacity: 1;
-  border-color: #a9904d;
 }
 .client-portrait-tabs > button[aria-selected='true'] img,
 .client-portrait-tabs > button:hover img {
   filter: grayscale(0);
+}
+.client-avatar-progress {
+  position: absolute;
+  inset: 1px;
+  width: 52px;
+  height: 52px;
+  overflow: visible;
+  pointer-events: none;
+  transform: rotate(-90deg);
+}
+.client-avatar-progress circle {
+  fill: none;
+  stroke-width: 1.5;
+}
+.client-avatar-progress-track {
+  stroke: rgb(36 38 32 / 16%);
+}
+.client-avatar-progress-ring,
+.client-avatar-progress-complete {
+  stroke: #9d8038;
+  stroke-linecap: round;
+  stroke-dasharray: 150.8;
+}
+.client-avatar-progress-ring {
+  stroke-dashoffset: 150.8;
+  animation: client-avatar-timer 10s linear forwards;
+}
+.client-avatar-progress-complete {
+  stroke-dashoffset: 0;
+}
+@keyframes client-avatar-timer {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 .client-arrow-controls {
   display: flex;
@@ -1569,8 +1630,7 @@ address {
   .hero-content {
     padding: 45px 0 35px;
   }
-  .hero-before img,
-  .hero-after img {
+  .hero-stage img {
     object-position: 65% center;
   }
   .hero-foot {
@@ -1610,9 +1670,13 @@ address {
     gap: 5px;
   }
   .client-portrait-tabs > button {
-    width: 44px;
-    height: 44px;
-    padding: 2px;
+    width: 50px;
+    height: 50px;
+    padding: 5px;
+  }
+  .client-avatar-progress {
+    width: 48px;
+    height: 48px;
   }
   .client-story-controls {
     gap: 22px;
@@ -1622,8 +1686,15 @@ address {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-after {
+  .hero-stage-complete {
     --reveal: 0% !important;
+  }
+  .hero-stage-structure,
+  .hero-stage-shell {
+    clip-path: inset(0) !important;
+  }
+  .hero-build-scan {
+    display: none;
   }
   .hero-atmosphere {
     opacity: 1;
@@ -1801,12 +1872,17 @@ address {
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(180deg, #f0efe7, #f0efe7aa 8%, transparent 32%);
+  background: linear-gradient(
+    180deg,
+    rgb(240 239 231 / 72%),
+    rgb(240 239 231 / 20%) 10%,
+    transparent 24%
+  );
 }
 .footer-landscape-building {
   z-index: 3;
-  mask-image: url('/images/generated/garden-sky-roofline.svg');
-  -webkit-mask-image: url('/images/generated/garden-sky-roofline.svg');
+  mask-image: url('/images/generated/garden-sky-roofline-v2.svg');
+  -webkit-mask-image: url('/images/generated/garden-sky-roofline-v2.svg');
   mask-size: cover;
   -webkit-mask-size: cover;
   mask-position: center 30%;
@@ -1825,7 +1901,7 @@ address {
 .footer-wordmark {
   position: absolute;
   z-index: 2;
-  top: 4%;
+  top: 13%;
   left: 50%;
   transform: translateX(-50%);
   font-size: clamp(85px, 23vw, 365px);
@@ -1833,26 +1909,21 @@ address {
   letter-spacing: -0.075em;
   line-height: 1.12;
   white-space: nowrap;
-  color: #354233;
-  opacity: 1;
-  mask-image: linear-gradient(
-    to bottom,
-    #000 28%,
-    #000e 45%,
-    #0006 68%,
-    transparent 94%
+  color: transparent;
+  background: linear-gradient(
+    180deg,
+    #fff 12%,
+    rgb(255 255 255 / 94%) 52%,
+    rgb(255 255 255 / 18%) 92%,
+    transparent 100%
   );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    #000 28%,
-    #000e 45%,
-    #0006 68%,
-    transparent 94%
-  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  filter: drop-shadow(0 2px 12px rgb(34 50 39 / 8%));
   pointer-events: none;
 }
 .footer-wordmark > span {
-  color: #b39a54;
+  color: rgb(255 248 224 / 90%);
 }
 .footer-landscape-note {
   position: absolute;
@@ -1915,7 +1986,7 @@ address {
     margin-top: 15px;
   }
   .footer-wordmark {
-    top: 7%;
+    top: 14%;
   }
 }
 @media (max-width: 600px) {
@@ -1966,7 +2037,7 @@ address {
     -webkit-mask-position: 58% bottom;
   }
   .footer-wordmark {
-    top: 15%;
+    top: 18%;
     font-size: 23vw;
   }
   .footer-landscape-note {
@@ -1988,13 +2059,13 @@ address {
   }
 }
 
-/* Native sticky framing keeps the restoration tied to the visitor's scroll. */
+/* Native sticky framing keeps the construction sequence tied to the visitor's scroll. */
 .hero-scroll-track {
   position: relative;
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-scroll-track {
-    height: 240svh;
+    height: 300svh;
   }
   .hero-scroll-track .architecture-hero {
     position: sticky;
@@ -2011,6 +2082,11 @@ address {
   .hero-scroll-track .hero-bottom-row {
     opacity: 0;
     visibility: hidden;
+  }
+}
+@media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
+  .hero-scroll-track {
+    height: 260svh;
   }
 }
 @media (max-height: 780px) and (prefers-reduced-motion: no-preference) {
