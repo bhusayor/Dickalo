@@ -1,6 +1,45 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
+/** Coalesce scroll/refresh updates so only the final state reaches the canvas. */
+export function createConstructionFrames(
+  draw: (progress: number) => void,
+  request: (callback: () => void) => number,
+  cancel: (id: number) => void,
+) {
+  let progress = 0;
+  let frame: number | undefined;
+  let ready = false;
+  let disposed = false;
+
+  function flush() {
+    if (frame !== undefined) cancel(frame);
+    frame = undefined;
+    if (ready && !disposed) draw(progress);
+  }
+
+  function redraw() {
+    if (ready && !disposed && frame === undefined) frame = request(flush);
+  }
+
+  return {
+    update(value: number) {
+      progress = value;
+      redraw();
+    },
+    redraw,
+    start() {
+      ready = true;
+      flush();
+    },
+    dispose() {
+      disposed = true;
+      if (frame !== undefined) cancel(frame);
+      frame = undefined;
+    },
+  };
+}
+
 type Axis = 'x' | 'y' | 'z';
 type GrowingPart = {
   object: THREE.Object3D;
@@ -293,24 +332,51 @@ export function mountConstructionScene(canvas: HTMLCanvasElement) {
   environmentSource.dispose();
   environmentGenerator.dispose();
   const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 160);
+  let disposed = false;
+  let width = 0;
+  let height = 0;
 
-  function resize() {
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
-    if (!width || !height) return;
+  function resizeBuffer() {
+    const nextWidth = canvas.clientWidth;
+    const nextHeight = canvas.clientHeight;
+    if (!nextWidth || !nextHeight || (nextWidth === width && nextHeight === height)) return;
+    width = nextWidth;
+    height = nextHeight;
     renderer.setSize(width, height, false);
     frameConstructionCamera(camera, width, height);
-    renderer.render(model.scene, camera);
   }
-  const observer = new ResizeObserver(resize);
-  observer.observe(canvas);
-  resize();
-  return {
-    render(progress: number) {
+  const frames = createConstructionFrames(
+    (progress) => {
+      // Resize and draw together: never expose a cleared drawing buffer.
+      resizeBuffer();
       model.setProgress(progress);
       renderer.render(model.scene, camera);
     },
+    (callback) => requestAnimationFrame(callback),
+    (id) => cancelAnimationFrame(id),
+  );
+  const observer = new ResizeObserver(() => {
+    if (canvas.clientWidth !== width || canvas.clientHeight !== height) frames.redraw();
+  });
+  observer.observe(canvas);
+  resizeBuffer();
+  return {
+    async prepare() {
+      // Warm every material, geometry upload and shadow pass while hidden.
+      // Otherwise later construction stages compile on their first scroll frame.
+      model.setProgress(1);
+      await renderer.compileAsync(model.scene, camera);
+      if (disposed) return;
+      renderer.render(model.scene, camera);
+      frames.start();
+    },
+    render(progress: number) {
+      frames.update(progress);
+    },
     dispose() {
+      if (disposed) return;
+      disposed = true;
+      frames.dispose();
       observer.disconnect();
       model.dispose();
       environment.dispose();

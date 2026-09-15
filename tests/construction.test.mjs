@@ -4,7 +4,43 @@ import { PerspectiveCamera, Vector3 } from 'three';
 import {
   createConstructionModel,
   frameConstructionCamera,
+  createConstructionFrames,
 } from '../lib/animations/constructionScene.ts';
+
+test('preparation and refresh never expose intermediate construction frames', () => {
+  const pending = new Map();
+  const drawn = [];
+  let id = 0;
+  const frames = createConstructionFrames(
+    (progress) => drawn.push(progress),
+    (callback) => {
+      pending.set(++id, callback);
+      return id;
+    },
+    (frame) => pending.delete(frame),
+  );
+  frames.update(0);
+  frames.update(0.6); // Scroll restored while shaders are still preparing.
+  assert.equal(pending.size, 0);
+  assert.deepEqual(drawn, []);
+  frames.start();
+  assert.deepEqual(drawn, [0.6]);
+  frames.update(0); // Temporary GSAP refresh/reset state.
+  frames.redraw(); // Resize notification in the same frame.
+  frames.update(0.62);
+  assert.equal(pending.size, 1);
+  [...pending.values()][0]();
+  assert.deepEqual(drawn, [0.6, 0.62]);
+  frames.update(0.4); // Reverse scroll remains supported.
+  [...pending.values()][0]();
+  assert.deepEqual(drawn, [0.6, 0.62, 0.4]);
+  frames.update(1);
+  frames.dispose();
+  frames.start();
+  frames.update(0);
+  assert.equal(pending.size, 0);
+  assert.deepEqual(drawn, [0.6, 0.62, 0.4]);
+});
 
 test('the same parts build monotonically and remain anchored to their bases', (t) => {
   const model = createConstructionModel();

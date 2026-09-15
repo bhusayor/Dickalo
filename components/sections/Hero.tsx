@@ -36,10 +36,9 @@ export function Hero() {
     const element = canvas.current;
     element?.addEventListener('webglcontextlost', contextLost);
     import('@/lib/animations/constructionScene')
-      .then(({ mountConstructionScene }) => {
+      .then(async ({ mountConstructionScene }) => {
         if (cancelled || !element) return;
         model = mountConstructionScene(element);
-        if (track.current) track.current.dataset.scene = 'ready';
         media.add('(prefers-reduced-motion: reduce)', () => {
           model?.render(1);
         });
@@ -54,7 +53,6 @@ export function Hero() {
                 start: 'top top',
                 end: 'bottom bottom',
                 scrub: 0.35,
-                invalidateOnRefresh: true,
               },
               onUpdate: () => {
                 const progress = construction.progress;
@@ -79,7 +77,7 @@ export function Hero() {
             // One model and one camera for the entire scroll. Each construction
             // component grows from its base at its own point in this shared timeline.
             story
-              .to(construction, { progress: 1, duration: 1 }, 0)
+              .fromTo(construction, { progress: 0 }, { progress: 1, duration: 1 }, 0)
               .fromTo(
                 '[data-hero-line]',
                 { y: 0, yPercent: 110, opacity: 0 },
@@ -99,12 +97,19 @@ export function Hero() {
                 0.84,
               );
             ScrollTrigger.refresh();
+            // A restored scroll position must be drawn before revealing the canvas.
+            story.progress(story.scrollTrigger?.progress ?? 0);
           }, section);
           return () => {
             reveal.current = null;
             context.revert();
           };
         });
+        const mountedModel = model;
+        await mountedModel.prepare();
+        if (!cancelled && model === mountedModel && track.current) {
+          track.current.dataset.scene = 'ready';
+        }
       })
       .catch(() => {
         if (!cancelled) fallback();
@@ -190,6 +195,7 @@ export function Hero() {
           <style>{`
           .hero-scroll-track { height: auto !important; }
           .hero-construction-canvas { display: none !important; }
+          .hero-construction-fallback { display: block !important; }
           .hero-scroll-track [data-hero-line] { transform: none; opacity: 1; }
           .hero-scroll-track .hero-overline, .hero-scroll-track .hero-bottom-row { opacity: 1; visibility: visible; }
         `}</style>

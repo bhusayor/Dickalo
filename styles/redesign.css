@@ -1320,6 +1320,7 @@ address {
 .hero-construction-fallback {
   position: absolute;
   inset: 0;
+  display: none;
 }
 .hero-construction-fallback img {
   object-fit: cover;
@@ -1328,8 +1329,11 @@ address {
 [data-scene='ready'] .hero-construction-canvas {
   visibility: visible;
 }
-[data-scene='ready'] .hero-construction-fallback {
-  display: none;
+[data-scene='fallback'] .hero-construction-fallback {
+  display: block;
+}
+.construction-hero .hero-media {
+  background: #c8d7dc;
 }
 .construction-hero h1 {
   max-width: 640px;
