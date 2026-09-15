@@ -1157,6 +1157,7 @@
   }
   .hero-scrim,
   .film-scrim,
+  .hero-media,
   .hero-image,
   .cta-drawing {
     display: none;
@@ -1304,56 +1305,45 @@ address {
 }
 .hero-media {
   position: absolute;
-  inset: -3% 0;
-  z-index: -3;
-}
-.hero-media .hero-image {
   inset: 0;
-  z-index: auto;
+  z-index: -3;
+  overflow: hidden;
 }
-.hero-stage {
+.hero-construction-canvas {
   position: absolute;
   inset: 0;
-  opacity: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
   visibility: hidden;
-  will-change: opacity;
 }
-.hero-stage img {
+.hero-construction-fallback {
+  position: absolute;
+  inset: 0;
+}
+.hero-construction-fallback img {
   object-fit: cover;
   object-position: center 58%;
 }
-.hero-stage-foundation {
-  z-index: 0;
-  opacity: 1;
+[data-scene='ready'] .hero-construction-canvas {
   visibility: visible;
 }
-.hero-stage-structure {
-  z-index: 1;
+[data-scene='ready'] .hero-construction-fallback {
+  display: none;
 }
-.hero-stage-shell {
-  z-index: 2;
+.construction-hero h1 {
+  max-width: 640px;
+  font-size: clamp(42px, 5.1vw, 78px);
 }
-.hero-stage-complete {
-  z-index: 3;
+.construction-hero .hero-content {
+  margin-top: auto;
+  padding-block: 35px;
 }
-.hero-transition-curtain {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  background: #202820;
-  will-change: opacity;
-}
-.hero-atmosphere {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  opacity: 0;
-  background: radial-gradient(ellipse at 75% 65%, #f6c35e25, transparent 65%);
-  mix-blend-mode: screen;
-  pointer-events: none;
+.construction-hero .hero-scrim {
+  background:
+    linear-gradient(90deg, #17221caa, #17221c33 45%, transparent 72%),
+    linear-gradient(0deg, #17221c99, transparent 48%),
+    linear-gradient(180deg, #17221c55, transparent 22%);
 }
 .hero-scrim {
   background:
@@ -1617,7 +1607,7 @@ address {
   .hero-content {
     padding: 45px 0 35px;
   }
-  .hero-stage img {
+  .hero-construction-fallback img {
     object-position: 65% center;
   }
   .hero-foot {
@@ -1673,22 +1663,6 @@ address {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-stage-complete {
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-  .hero-stage-foundation,
-  .hero-stage-structure,
-  .hero-stage-shell {
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-  .hero-transition-curtain {
-    display: none;
-  }
-  .hero-atmosphere {
-    opacity: 1;
-  }
   .client-portrait-tabs > button:hover {
     transform: none;
   }
@@ -1697,11 +1671,6 @@ address {
 /* Let the architecture tell the story; the movement follows the visitor. */
 .hero-topline {
   justify-content: flex-end;
-}
-.hero-camera {
-  position: absolute;
-  inset: -16px;
-  will-change: transform;
 }
 
 /* An architectural image and a clear, generous studio directory. */
@@ -1721,11 +1690,6 @@ address {
   .hero-scroll {
     order: 0;
     gap: 10px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero-camera {
-    will-change: auto;
   }
 }
 
@@ -2055,7 +2019,7 @@ address {
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-scroll-track {
-    height: 360svh;
+    height: 340svh;
   }
   .hero-scroll-track .architecture-hero {
     position: sticky;
@@ -2074,9 +2038,25 @@ address {
     visibility: hidden;
   }
 }
-@media (max-width: 600px) and (prefers-reduced-motion: no-preference) {
-  .hero-scroll-track {
-    height: 320svh;
+.hero-scroll-track[data-scene='fallback'] {
+  height: auto;
+}
+[data-scene='fallback'] [data-hero-line] {
+  transform: none !important;
+  opacity: 1 !important;
+}
+[data-scene='fallback'] .hero-overline,
+[data-scene='fallback'] .hero-bottom-row {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+@media (max-width: 600px) {
+  .construction-hero h1 {
+    max-width: 400px;
+    font-size: clamp(34px, 9vw, 49px);
+  }
+  .construction-hero .hero-content {
+    padding-block: 20px;
   }
 }
 @media (max-height: 780px) and (prefers-reduced-motion: no-preference) {

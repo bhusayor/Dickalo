@@ -12,6 +12,7 @@ const imageSizes = '(max-width: 600px) 1200px, (max-width: 900px) 1400px, 100vw'
 export function Hero() {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
+  const canvas = useRef<HTMLCanvasElement>(null);
   const reveal = useRef<gsap.core.Timeline | null>(null);
   const { scrollTo } = useSmoothScroll();
 
@@ -19,178 +20,129 @@ export function Hero() {
     registerGsap();
     const media = gsap.matchMedia();
     let cancelled = false;
-    const ready = Array.from(section.current?.querySelectorAll('img') ?? []).map((image) =>
-      image.decode().catch(() => {}),
-    );
-    Promise.all(ready).then(() => {
-      if (cancelled) return;
-      media.add('(prefers-reduced-motion: no-preference)', () => {
-        const context = gsap.context(() => {
-          const story = gsap.timeline({
-            defaults: { ease: 'none' },
-            scrollTrigger: {
-              id: 'hero-construction',
-              trigger: track.current,
-              start: 'top top',
-              end: 'bottom bottom',
-              scrub: true,
-              invalidateOnRefresh: true,
-            },
-            onUpdate: () => {
-              const progress = story.progress();
-              section.current?.setAttribute('data-hero-progress', progress.toFixed(3));
-              section.current?.setAttribute(
-                'data-hero-state',
-                progress < 0.215
-                  ? 'foundation'
-                  : progress < 0.455
-                    ? 'structure'
-                    : progress < 0.715
-                      ? 'enclosure'
-                      : 'complete',
+    let model:
+      | ReturnType<typeof import('@/lib/animations/constructionScene').mountConstructionScene>
+      | undefined;
+    const fallback = () => {
+      media.revert();
+      model?.dispose();
+      model = undefined;
+      if (track.current) track.current.dataset.scene = 'fallback';
+    };
+    const contextLost = (event: Event) => {
+      event.preventDefault();
+      fallback();
+    };
+    const element = canvas.current;
+    element?.addEventListener('webglcontextlost', contextLost);
+    import('@/lib/animations/constructionScene')
+      .then(({ mountConstructionScene }) => {
+        if (cancelled || !element) return;
+        model = mountConstructionScene(element);
+        if (track.current) track.current.dataset.scene = 'ready';
+        media.add('(prefers-reduced-motion: reduce)', () => {
+          model?.render(1);
+        });
+        media.add('(prefers-reduced-motion: no-preference)', () => {
+          const context = gsap.context(() => {
+            const construction = { progress: 0 };
+            const story = gsap.timeline({
+              defaults: { ease: 'none' },
+              scrollTrigger: {
+                id: 'hero-construction',
+                trigger: track.current,
+                start: 'top top',
+                end: 'bottom bottom',
+                scrub: 0.35,
+                invalidateOnRefresh: true,
+              },
+              onUpdate: () => {
+                const progress = construction.progress;
+                model?.render(progress);
+                section.current?.setAttribute('data-hero-progress', progress.toFixed(3));
+                section.current?.setAttribute(
+                  'data-hero-state',
+                  progress < 0.15
+                    ? 'foundation'
+                    : progress < 0.65
+                      ? 'structure'
+                      : progress < 0.84
+                        ? 'finishing'
+                        : 'complete',
+                );
+              },
+            });
+            reveal.current = story;
+            section.current?.setAttribute('data-hero-state', 'foundation');
+            section.current?.setAttribute('data-hero-progress', '0');
+            model?.render(0);
+            // One model and one camera for the entire scroll. Each construction
+            // component grows from its base at its own point in this shared timeline.
+            story
+              .to(construction, { progress: 1, duration: 1 }, 0)
+              .fromTo(
+                '[data-hero-line]',
+                { y: 0, yPercent: 110, opacity: 0 },
+                { y: 0, yPercent: 0, opacity: 1, duration: 0.2, stagger: 0.06, ease: 'power2.out' },
+                0.7,
+              )
+              .fromTo(
+                '.hero-overline',
+                { y: 18, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.2 },
+                0.66,
+              )
+              .fromTo(
+                '.hero-bottom-row',
+                { y: 24, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.16 },
+                0.84,
               );
-            },
-          });
-          reveal.current = story;
-          section.current?.setAttribute('data-hero-state', 'foundation');
-          section.current?.setAttribute('data-hero-progress', '0');
-          gsap.set('.hero-stage-foundation', { autoAlpha: 1 });
-          gsap.set(['.hero-stage-structure', '.hero-stage-shell', '.hero-stage-complete'], {
-            autoAlpha: 0,
-          });
-          gsap.set('.hero-transition-curtain', { autoAlpha: 0 });
-          story
-            .fromTo('[data-hero-image]', { scale: 1.075 }, { scale: 1, duration: 1 }, 0)
-            .to('.hero-transition-curtain', { autoAlpha: 1, duration: 0.035 }, 0.18)
-            .set('.hero-stage-foundation', { autoAlpha: 0 }, 0.215)
-            .set('.hero-stage-structure', { autoAlpha: 1 }, 0.215)
-            .to('.hero-transition-curtain', { autoAlpha: 0, duration: 0.035 }, 0.215)
-            .to('.hero-transition-curtain', { autoAlpha: 1, duration: 0.035 }, 0.42)
-            .set('.hero-stage-structure', { autoAlpha: 0 }, 0.455)
-            .set('.hero-stage-shell', { autoAlpha: 1 }, 0.455)
-            .to('.hero-transition-curtain', { autoAlpha: 0, duration: 0.035 }, 0.455)
-            .to('.hero-transition-curtain', { autoAlpha: 1, duration: 0.035 }, 0.68)
-            .set('.hero-stage-shell', { autoAlpha: 0 }, 0.715)
-            .set('.hero-stage-complete', { autoAlpha: 1 }, 0.715)
-            .to('.hero-transition-curtain', { autoAlpha: 0, duration: 0.035 }, 0.715)
-            .fromTo('.hero-atmosphere', { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0.73)
-            .fromTo(
-              '[data-hero-line]',
-              { y: 0, yPercent: 110, opacity: 0 },
-              { y: 0, yPercent: 0, opacity: 1, duration: 0.28, stagger: 0.1, ease: 'power2.out' },
-              0.52,
-            )
-            .fromTo(
-              '.hero-overline',
-              { y: 18, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, duration: 0.25 },
-              0.5,
-            )
-            .fromTo(
-              '.hero-bottom-row',
-              { y: 24, autoAlpha: 0 },
-              { y: 0, autoAlpha: 1, duration: 0.28 },
-              0.76,
-            );
-          ScrollTrigger.refresh();
-        }, section);
-        return () => {
-          reveal.current = null;
-          context.revert();
-        };
-      });
-      media.add(
-        '(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)',
-        () => {
-          const element = section.current;
-          if (!element) return;
-          const camera = element.querySelector('.hero-camera');
-          const light = element.querySelector('.hero-atmosphere');
-          const moveX = gsap.quickTo(camera, 'x', { duration: 1.4, ease: 'power3.out' });
-          const moveY = gsap.quickTo(camera, 'y', { duration: 1.4, ease: 'power3.out' });
-          const lightX = gsap.quickTo(light, 'x', { duration: 1.8, ease: 'power3.out' });
-          const lightY = gsap.quickTo(light, 'y', { duration: 1.8, ease: 'power3.out' });
-          const move = (event: PointerEvent) => {
-            const bounds = element.getBoundingClientRect();
-            const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-            const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-            moveX(x * -22);
-            moveY(y * -16);
-            lightX(x * 100);
-            lightY(y * 60);
-          };
-          const reset = () => {
-            moveX(0);
-            moveY(0);
-            lightX(0);
-            lightY(0);
-          };
-          element.addEventListener('pointermove', move);
-          element.addEventListener('pointerleave', reset);
+            ScrollTrigger.refresh();
+          }, section);
           return () => {
-            element.removeEventListener('pointermove', move);
-            element.removeEventListener('pointerleave', reset);
+            reveal.current = null;
+            context.revert();
           };
-        },
-      );
-    });
+        });
+      })
+      .catch(() => {
+        if (!cancelled) fallback();
+      });
     return () => {
       cancelled = true;
       media.revert();
+      model?.dispose();
+      element?.removeEventListener('webglcontextlost', contextLost);
     };
   }, []);
 
   return (
-    <div ref={track} className="hero-scroll-track">
-      <section ref={section} id="hero" className="architecture-hero" aria-labelledby="hero-heading">
+    <div ref={track} className="hero-scroll-track" data-scene="loading">
+      <section
+        ref={section}
+        id="hero"
+        className="architecture-hero construction-hero"
+        aria-labelledby="hero-heading"
+      >
         <div className="hero-media">
-          <div className="hero-camera">
-            <div className="hero-image" data-hero-image>
-              <div className="hero-stage hero-stage-foundation">
-                <NextImage
-                  src="/images/generated/courtyard-foundation.webp"
-                  alt=""
-                  fill
-                  priority
-                  sizes={imageSizes}
-                  quality={88}
-                />
-              </div>
-              <div className="hero-stage hero-stage-structure">
-                <NextImage
-                  src="/images/generated/courtyard-structure.webp"
-                  alt=""
-                  fill
-                  loading="eager"
-                  sizes={imageSizes}
-                  quality={88}
-                />
-              </div>
-              <div className="hero-stage hero-stage-shell">
-                <NextImage
-                  src="/images/generated/courtyard-before.webp"
-                  alt=""
-                  fill
-                  loading="eager"
-                  sizes={imageSizes}
-                  quality={88}
-                />
-              </div>
-              <div className="hero-stage hero-stage-complete">
-                <NextImage
-                  src="/images/generated/courtyard-residence.webp"
-                  alt="A modern Nigerian courtyard residence progressing from its foundations to a completed, landscaped home"
-                  fill
-                  loading="eager"
-                  sizes={imageSizes}
-                  quality={90}
-                />
-              </div>
-            </div>
+          <div className="hero-construction-fallback">
+            <NextImage
+              src="/images/generated/courtyard-residence.webp"
+              alt="A contemporary Nigerian courtyard residence with a landscaped garden"
+              fill
+              priority
+              sizes={imageSizes}
+              quality={90}
+            />
           </div>
+          <canvas
+            ref={canvas}
+            className="hero-construction-canvas"
+            role="img"
+            aria-label="A Nigerian garden-house concept assembling in place as you scroll, from its foundation and concrete frame through walls, roof, glazing and landscaping"
+          />
         </div>
-        <div className="hero-transition-curtain" aria-hidden="true" />
-        <div className="hero-atmosphere" aria-hidden="true" />
         <div className="hero-scrim" />
         <div className="hero-grid" aria-hidden="true" />
         <div className="hero-topline" data-hero-detail>
@@ -237,8 +189,7 @@ export function Hero() {
         <noscript>
           <style>{`
           .hero-scroll-track { height: auto !important; }
-          .hero-stage-foundation, .hero-stage-structure, .hero-stage-shell { display: none !important; }
-          .hero-stage-complete { opacity: 1 !important; visibility: visible !important; }
+          .hero-construction-canvas { display: none !important; }
           .hero-scroll-track [data-hero-line] { transform: none; opacity: 1; }
           .hero-scroll-track .hero-overline, .hero-scroll-track .hero-bottom-row { opacity: 1; visibility: visible; }
         `}</style>
