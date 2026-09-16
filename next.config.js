@@ -2,9 +2,8 @@
  * Next.js configuration for DICKALO.
  *
  * Notable choices:
- * - `optimizePackageImports` keeps GSAP and Framer Motion tree-shaken. There is
- *   no WebGL in this project: the hero is a video, which costs one HTTP request
- *   and no JavaScript at all.
+ * - `optimizePackageImports` keeps GSAP and Framer Motion tree-shaken.
+ * - The hero uses a pre-rendered Blender sequence on a 2D canvas.
  * - Long-lived immutable caching for videos and fonts served from /public.
  * - A conservative security header set. `Permissions-Policy` is deliberately tight
  *   because nothing on this site needs camera, mic or geolocation.
@@ -61,6 +60,10 @@ const nextConfig = {
       },
       {
         source: '/videos/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+      },
+      {
+        source: '/images/hero-construction/v1/:path*',
         headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
       {

@@ -17,7 +17,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test:construction": "node --experimental-strip-types --test tests/construction.test.mjs",
+    "test:construction": "node --experimental-strip-types --test tests/construction*.test.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,css,md,json}\"",
     "sanity:dev": "sanity dev",
     "sanity:deploy": "sanity deploy",

@@ -1317,14 +1317,22 @@ address {
   height: 100%;
   visibility: hidden;
 }
-.hero-construction-fallback {
+.hero-construction-fallback,
+.hero-construction-poster {
   position: absolute;
   inset: 0;
+}
+.hero-construction-fallback {
   display: none;
 }
-.hero-construction-fallback img {
+.hero-construction-fallback img,
+.hero-construction-poster img {
   object-fit: cover;
-  object-position: center 58%;
+  object-position: 66% center;
+}
+[data-scene='ready'] .hero-construction-poster,
+[data-scene='fallback'] .hero-construction-poster {
+  display: none;
 }
 [data-scene='ready'] .hero-construction-canvas {
   visibility: visible;
@@ -1612,7 +1620,7 @@ address {
     padding: 45px 0 35px;
   }
   .hero-construction-fallback img {
-    object-position: 65% center;
+    object-position: 66% center;
   }
   .hero-foot {
     flex-wrap: wrap;
@@ -2021,6 +2029,14 @@ address {
 .hero-scroll-track {
   position: relative;
 }
+@media (prefers-reduced-motion: reduce) {
+  .hero-construction-poster {
+    display: none;
+  }
+  .hero-construction-fallback {
+    display: block;
+  }
+}
 @media (prefers-reduced-motion: no-preference) {
   .hero-scroll-track {
     height: 340svh;
@@ -2053,6 +2069,21 @@ address {
 [data-scene='fallback'] .hero-bottom-row {
   opacity: 1 !important;
   visibility: visible !important;
+}
+@media (max-width: 600px), (max-width: 900px) and (orientation: portrait) {
+  .construction-hero {
+    background: #17271e;
+  }
+  .construction-hero .hero-media {
+    top: 9svh;
+    bottom: auto;
+    height: 90vw;
+    max-height: 52svh;
+    mask-image: linear-gradient(transparent, #000 12%, #000 82%, transparent);
+  }
+  .construction-hero .hero-scrim {
+    background: linear-gradient(0deg, #17271e 2%, transparent 52%);
+  }
 }
 @media (max-width: 600px) {
   .construction-hero h1 {
