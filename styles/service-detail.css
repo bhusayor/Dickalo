@@ -28,31 +28,59 @@
 
 .service-detail-hero-copy {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr);
+  grid-template-columns: minmax(0, 1.08fr) minmax(20rem, 0.72fr);
   align-items: end;
-  gap: clamp(3rem, 8vw, 8rem);
-  padding-bottom: clamp(3rem, 6vw, 5.5rem);
+  gap: clamp(3rem, 6vw, 6rem);
+  padding-bottom: clamp(2.75rem, 5vw, 4.5rem);
 }
 
-.service-detail-hero-copy .eyebrow {
-  margin-bottom: 1.5rem;
+.service-detail-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: clamp(1.25rem, 2vw, 1.75rem);
   color: var(--text-accent);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.service-detail-kicker span + span {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--text-muted);
+}
+
+.service-detail-kicker span + span::before {
+  width: 2.5rem;
+  height: 1px;
+  background: var(--line);
+  content: '';
 }
 
 .service-detail-hero h1 {
-  max-width: 13ch;
+  max-width: 15ch;
   font-family: var(--font-display-stack);
-  font-size: clamp(3.25rem, 7vw, 7.6rem);
+  font-size: clamp(3rem, 5.25vw, 5.9rem);
   font-weight: 400;
-  letter-spacing: -0.065em;
-  line-height: 0.94;
+  letter-spacing: -0.055em;
+  line-height: 0.99;
   text-wrap: balance;
 }
 
+.service-detail-hero h1.service-detail-title--long {
+  max-width: 17ch;
+  font-size: clamp(2.8rem, 4.55vw, 5rem);
+  line-height: 1.02;
+}
+
 .service-detail-hero-intro > p {
+  max-width: 36rem;
   color: var(--text-secondary);
-  font-size: clamp(1rem, 1.45vw, 1.25rem);
-  line-height: 1.75;
+  font-size: clamp(0.98rem, 1.25vw, 1.15rem);
+  line-height: 1.8;
 }
 
 .service-detail-actions {
@@ -410,7 +438,7 @@
 
   .service-detail-hero-copy {
     align-items: start;
-    gap: 2.5rem;
+    gap: 2.25rem;
   }
 
   .service-detail-hero-intro {
@@ -445,13 +473,21 @@
   }
 
   .service-detail-hero h1 {
-    font-size: clamp(3.2rem, 15vw, 5.2rem);
+    max-width: 16ch;
+    font-size: clamp(2.85rem, 12vw, 4.3rem);
+    line-height: 1;
+  }
+
+  .service-detail-hero h1.service-detail-title--long {
+    max-width: 18ch;
+    font-size: clamp(2.65rem, 10.5vw, 3.8rem);
+    line-height: 1.03;
   }
 
   .service-detail-hero-image {
-    height: 65svh;
-    min-height: 27rem;
-    max-height: 38rem;
+    height: 58svh;
+    min-height: 25rem;
+    max-height: 36rem;
   }
 
   .service-detail-image-label {

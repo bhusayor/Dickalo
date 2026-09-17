@@ -95,8 +95,15 @@ export default async function ServiceDetailPage({ params }: { params: { slug: st
 
           <div className="service-detail-hero-copy">
             <div>
-              <p className="eyebrow">Service {String(serviceIndex + 1).padStart(2, '0')}</p>
-              <h1>{detail.headline}</h1>
+              <p className="service-detail-kicker">
+                <span>Service {String(serviceIndex + 1).padStart(2, '0')}</span>
+                <span>{service.title}</span>
+              </p>
+              <h1
+                className={detail.headline.length > 40 ? 'service-detail-title--long' : undefined}
+              >
+                {detail.headline}
+              </h1>
             </div>
             <div className="service-detail-hero-intro">
               <p>{detail.introduction}</p>
