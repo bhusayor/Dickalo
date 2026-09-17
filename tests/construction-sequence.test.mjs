@@ -6,6 +6,7 @@ import {
   constructionFrame,
   coverFrame,
   createFrameCache,
+  decodeSequenceImage,
   mountConstructionSequence,
 } from '../lib/animations/constructionSequence.ts';
 
@@ -63,6 +64,38 @@ test('failed decodes can retry without poisoning the cache', async () => {
   await assert.rejects(cache.load(3));
   assert.ok(await cache.load(3));
   cache.dispose();
+});
+
+test('a local preview can decode through an image element when createImageBitmap rejects WebP', async (t) => {
+  const originals = new Map(['createImageBitmap', 'Image'].map((name) => [name, globalThis[name]]));
+  const originalCreate = URL.createObjectURL;
+  const originalRevoke = URL.revokeObjectURL;
+  t.after(() => {
+    for (const [name, value] of originals) {
+      if (value === undefined) delete globalThis[name];
+      else globalThis[name] = value;
+    }
+    URL.createObjectURL = originalCreate;
+    URL.revokeObjectURL = originalRevoke;
+  });
+  let revoked = false;
+  globalThis.createImageBitmap = async () => {
+    throw new Error('WebP blob decoding is unavailable');
+  };
+  URL.createObjectURL = () => 'blob:local-frame';
+  URL.revokeObjectURL = () => {
+    revoked = true;
+  };
+  globalThis.Image = class {
+    set src(value) {
+      this.currentSrc = value;
+      queueMicrotask(() => this.onload());
+    }
+  };
+
+  const image = await decodeSequenceImage(new Blob(['frame'], { type: 'image/webp' }));
+  assert.equal(image.currentSrc, 'blob:local-frame');
+  assert.equal(revoked, true);
 });
 
 test('responsive framing covers the canvas without exposing empty edges', () => {

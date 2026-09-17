@@ -105,8 +105,9 @@ export function Hero() {
             await model.prepare();
             if (!cancelled && track.current) track.current.dataset.scene = 'ready';
           })
-          .catch(() => {
+          .catch((error) => {
             if (cancelled) return;
+            console.error('Hero construction sequence failed to initialize', error);
             animation?.revert();
             model?.dispose();
             if (track.current) track.current.dataset.scene = 'fallback';

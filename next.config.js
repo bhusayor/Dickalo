@@ -13,6 +13,11 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
 });
 
+const immutableAssetCache =
+  process.env.NODE_ENV === 'production'
+    ? 'public, max-age=31536000, immutable'
+    : 'no-store, max-age=0';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Allow a production verification build alongside the IDE's dev server.
@@ -64,7 +69,7 @@ const nextConfig = {
       },
       {
         source: '/images/hero-construction/v1/:path*',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+        headers: [{ key: 'Cache-Control', value: immutableAssetCache }],
       },
       {
         source: '/fonts/:path*',

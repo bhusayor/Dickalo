@@ -4,6 +4,8 @@ export type SequenceManifest = {
   frames: { offset: number; length: number; x: number; y: number; width: number; height: number }[];
 };
 
+type DecodedImage = ImageBitmap | HTMLImageElement;
+
 export const SEQUENCE_ROOT = '/images/hero-construction/v1';
 
 export function constructionFrame(progress: number, count: number) {
@@ -29,9 +31,13 @@ export function coverFrame(
 }
 
 /** An LRU of decoded frames keeps mobile memory bounded; compressed frames share one request. */
-export function createFrameCache<T extends { close(): void }>(
+export function createFrameCache<T>(
   decode: (index: number) => Promise<T>,
   capacity = 18,
+  release: (frame: T) => void = (frame) => {
+    const close = (frame as { close?: () => void }).close;
+    if (typeof close === 'function') close.call(frame);
+  },
 ) {
   const cache = new Map<number, T>();
   const pending = new Map<number, Promise<T | undefined>>();
@@ -54,13 +60,14 @@ export function createFrameCache<T extends { close(): void }>(
       const promise = decode(index)
         .then((frame) => {
           if (disposed) {
-            frame.close();
+            release(frame);
             return undefined;
           }
           cache.set(index, frame);
           while (cache.size > capacity) {
             const oldest = cache.keys().next().value!;
-            cache.get(oldest)?.close();
+            const evicted = cache.get(oldest);
+            if (evicted) release(evicted);
             cache.delete(oldest);
           }
           return frame;
@@ -71,10 +78,41 @@ export function createFrameCache<T extends { close(): void }>(
     },
     dispose() {
       disposed = true;
-      cache.forEach((frame) => frame.close());
+      cache.forEach(release);
       cache.clear();
     },
   };
+}
+
+/** Safari and embedded preview browsers can expose createImageBitmap without
+ * accepting WebP blobs. An HTML image keeps the sequence usable there. */
+export async function decodeSequenceImage(blob: Blob): Promise<DecodedImage> {
+  if (typeof createImageBitmap === 'function') {
+    try {
+      return await createImageBitmap(blob);
+    } catch {
+      // Continue with the broadly supported image-element decoder.
+    }
+  }
+
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const url = URL.createObjectURL(blob);
+    const image = new Image();
+    image.decoding = 'async';
+    image.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(image);
+    };
+    image.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Construction frame could not be decoded'));
+    };
+    image.src = url;
+  });
+}
+
+function releaseSequenceImage(image: DecodedImage) {
+  if ('close' in image && typeof image.close === 'function') image.close();
 }
 
 export function mountConstructionSequence(canvas: HTMLCanvasElement) {
@@ -83,7 +121,7 @@ export function mountConstructionSequence(canvas: HTMLCanvasElement) {
   const abort = new AbortController();
   let manifest: SequenceManifest;
   let source: Blob;
-  let background: ImageBitmap | undefined;
+  let background: DecodedImage | undefined;
   let disposed = false;
   let prepared = false;
   let progress = 0;
@@ -93,10 +131,16 @@ export function mountConstructionSequence(canvas: HTMLCanvasElement) {
   let resizing = true;
   let decoding = false;
   let prefetching = false;
-  const cache = createFrameCache(async (index) => {
-    const frame = manifest.frames[index];
-    return createImageBitmap(source.slice(frame.offset, frame.offset + frame.length, 'image/webp'));
-  });
+  const cache = createFrameCache(
+    async (index) => {
+      const frame = manifest.frames[index];
+      return decodeSequenceImage(
+        source.slice(frame.offset, frame.offset + frame.length, 'image/webp'),
+      );
+    },
+    18,
+    releaseSequenceImage,
+  );
 
   function paint(index: number) {
     const image = cache.get(index);
@@ -181,7 +225,12 @@ export function mountConstructionSequence(canvas: HTMLCanvasElement) {
 
   return {
     async prepare() {
-      const options = { signal: abort.signal };
+      const options: RequestInit = {
+        signal: abort.signal,
+        // Local assets change frequently while their public URL stays stable.
+        // Bypass any older immutable response left by a previous dev session.
+        cache: process.env.NODE_ENV === 'development' ? 'no-store' : 'force-cache',
+      };
       const [indexResponse, framesResponse, backgroundResponse] = await Promise.all([
         fetch(`${SEQUENCE_ROOT}/sequence.json`, options),
         fetch(`${SEQUENCE_ROOT}/frames.bin`, options),
@@ -191,9 +240,9 @@ export function mountConstructionSequence(canvas: HTMLCanvasElement) {
         throw new Error('Construction sequence unavailable');
       [manifest, source] = await Promise.all([indexResponse.json(), framesResponse.blob()]);
       if (!manifest.frames.length) throw new Error('Construction sequence empty');
-      const decodedBackground = await createImageBitmap(await backgroundResponse.blob());
+      const decodedBackground = await decodeSequenceImage(await backgroundResponse.blob());
       if (disposed) {
-        decodedBackground.close();
+        releaseSequenceImage(decodedBackground);
         return;
       }
       background = decodedBackground;
@@ -218,7 +267,7 @@ export function mountConstructionSequence(canvas: HTMLCanvasElement) {
       observer.disconnect();
       if (raf !== undefined) cancelAnimationFrame(raf);
       cache.dispose();
-      background?.close();
+      if (background) releaseSequenceImage(background);
     },
   };
 }
