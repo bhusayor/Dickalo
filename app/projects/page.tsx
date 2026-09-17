@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import Link from 'next/link';
 import { Container } from '@/components/common/Container';
 import { PageHeader } from '@/components/common/PageHeader';
 import { CTA } from '@/components/sections/CTA';
@@ -36,6 +37,29 @@ export default async function ProjectsPage() {
 
       <section className="section-space bg-surface-base">
         <Container>
+          <article className="virtual-tour-card">
+            <div>
+              <span className="micro-label">New · interactive prototype</span>
+              <h2>Step inside a building before it exists.</h2>
+            </div>
+            <div className="virtual-tour-card-copy">
+              <p>
+                Walk through a complete two-storey duplex in your browser. Explore the rooms, change
+                floors and experience the plan at human scale.
+              </p>
+              <Link href="/tour/duplex" className="virtual-tour-card-link">
+                Launch the virtual tour
+                <svg viewBox="0 0 18 18" aria-hidden="true">
+                  <path
+                    d="M3 9h11M10 4l5 5-5 5"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </Link>
+            </div>
+          </article>
           <Suspense
             fallback={
               <div className="grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">

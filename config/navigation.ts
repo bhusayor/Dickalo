@@ -42,6 +42,7 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
     title: 'Work',
     links: [
       { label: 'All projects', href: '/projects' },
+      { label: 'Virtual tour', href: '/tour/duplex' },
       { label: 'Residential', href: '/projects?category=residential' },
       { label: 'Commercial', href: '/projects?category=commercial' },
       { label: 'Interiors', href: '/projects?category=interior' },
