@@ -42,7 +42,8 @@ export const project = defineType({
       group: 'content',
       description:
         'The single most interesting thing about this project. Written as a claim, not a category. Example: "A family house designed around the harmattan, not against it."',
-      validation: (rule) => rule.max(90).warning('Over 90 characters will wrap awkwardly on cards.'),
+      validation: (rule) =>
+        rule.max(90).warning('Over 90 characters will wrap awkwardly on cards.'),
     }),
     defineField({
       name: 'excerpt',
@@ -67,12 +68,12 @@ export const project = defineType({
             { title: 'Subheading', value: 'h3' },
             { title: 'Quote', value: 'blockquote' },
           ],
-          lists: [{ title: 'Bullet', value: 'bullet' }, { title: 'Numbered', value: 'number' }],
+          lists: [
+            { title: 'Bullet', value: 'bullet' },
+            { title: 'Numbered', value: 'number' },
+          ],
           marks: {
-            decorators: [
-              { title: 'Bold', value: 'strong' },
-              { title: 'Italic', value: 'em' },
-            ],
+            decorators: [{ title: 'Bold', value: 'strong' }],
             annotations: [
               {
                 name: 'link',
@@ -268,7 +269,8 @@ export const project = defineType({
           type: 'text',
           rows: 2,
           title: 'Search description',
-          description: 'Google shows about 155 characters. Say what is interesting, not what it is.',
+          description:
+            'Google shows about 155 characters. Say what is interesting, not what it is.',
           validation: (rule) => rule.max(160),
         },
         {
@@ -289,12 +291,22 @@ export const project = defineType({
 
   orderings: [
     { title: 'Sort order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] },
-    { title: 'Newest first', name: 'createdDesc', by: [{ field: '_createdAt', direction: 'desc' }] },
+    {
+      title: 'Newest first',
+      name: 'createdDesc',
+      by: [{ field: '_createdAt', direction: 'desc' }],
+    },
     { title: 'Name A–Z', name: 'titleAsc', by: [{ field: 'title', direction: 'asc' }] },
   ],
 
   preview: {
-    select: { title: 'title', category: 'category', location: 'location', year: 'year', media: 'coverImage' },
+    select: {
+      title: 'title',
+      category: 'category',
+      location: 'location',
+      year: 'year',
+      media: 'coverImage',
+    },
     prepare({ title, category, location, year, media }) {
       return {
         title,

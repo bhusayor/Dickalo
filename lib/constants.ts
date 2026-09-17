@@ -1,6 +1,7 @@
 import type {
   BudgetBand,
   ProcessStep,
+  PortableTextBlock,
   Project,
   ProjectCategory,
   ProjectType,
@@ -282,6 +283,23 @@ const placeholderImage = {
   asset: { _ref: '', _type: 'reference' as const },
 };
 
+function projectStory(id: string, heading: string, paragraphs: string[]): PortableTextBlock[] {
+  return [heading, ...paragraphs].map((text, index) => ({
+    _key: `${id}-${index}`,
+    _type: 'block',
+    style: index === 0 ? 'h2' : 'normal',
+    markDefs: [],
+    children: [
+      {
+        _key: `${id}-${index}-span`,
+        _type: 'span',
+        text,
+        marks: [],
+      },
+    ],
+  }));
+}
+
 export const FALLBACK_PROJECTS: Project[] = [
   {
     _id: 'p-1',
@@ -296,8 +314,24 @@ export const FALLBACK_PROJECTS: Project[] = [
     duration: '16 months',
     excerpt:
       'Five bedrooms arranged around a shaded courtyard so the house cools itself. Cross-ventilation does the work the generator used to.',
+    body: projectStory('banana-story', 'The courtyard became the plan', [
+      'The family wanted privacy from the street without living behind closed curtains. We placed the social rooms around a planted courtyard, then opened each one on two sides so air can move through the house even on still afternoons.',
+      'Deep verandas keep the glass in shade. Pale stone, warm timber and a restrained structure let the changing light and garden carry the rooms from morning to evening.',
+    ]),
     coverImage: placeholderImage,
     coverImageUrl: '/images/projects/banana-island-residence.jpg',
+    galleryImageUrls: [
+      {
+        src: '/images/projects/gallery/banana-island-courtyard.webp',
+        alt: 'Shaded courtyard of the Banana Island Residence with a mature tree and tropical planting',
+        caption: 'The central courtyard brings shade, air and greenery into the heart of the home.',
+      },
+      {
+        src: '/images/projects/gallery/banana-island-living.webp',
+        alt: 'Double-height living room opening onto the courtyard at Banana Island Residence',
+        caption: 'Living spaces open on two sides to make cross-ventilation part of daily life.',
+      },
+    ],
     featured: true,
     order: 1,
   },
@@ -314,8 +348,25 @@ export const FALLBACK_PROJECTS: Project[] = [
     duration: '31 months',
     excerpt:
       'A commercial tower with an operable façade and a core placed to keep every desk within eight metres of daylight.',
+    body: projectStory('meridian-story', 'Daylight set the floor plate', [
+      'We started with the working day rather than the skyline. Moving the core to the west shortened every route to a window and created office floors that can divide without leaving dark space behind.',
+      'The external fins cut the hardest sun while operable panels let each floor use Abuja’s cooler mornings. The result is a tall building that feels open at the scale of a single desk.',
+    ]),
     coverImage: placeholderImage,
     coverImageUrl: '/images/projects/meridian-tower.jpg',
+    galleryImageUrls: [
+      {
+        src: '/images/projects/gallery/meridian-tower-exterior.webp',
+        alt: 'Meridian Tower in Abuja with a shaded blue-glass climate facade',
+        caption:
+          'Deep fins and opening panels turn the facade into part of the environmental system.',
+      },
+      {
+        src: '/images/projects/gallery/meridian-tower-office.webp',
+        alt: 'Daylit office floor inside Meridian Tower with timber finishes and city views',
+        caption: 'The compact plan keeps every workstation close to daylight and a view.',
+      },
+    ],
     featured: true,
     order: 2,
   },
@@ -332,8 +383,25 @@ export const FALLBACK_PROJECTS: Project[] = [
     duration: '24 months',
     excerpt:
       'Terracotta screens, local hardwood and a lobby built around a single mature tree that was on site before we were.',
+    body: projectStory('harbourline-story', 'The tree decided where arrival begins', [
+      'A mature tree stood on the only sensible place for the lobby. Instead of removing it, we divided the arrival sequence around it and made the canopy the first ceiling guests experience.',
+      'Terracotta screens soften the rain and sun, while dark local hardwood continues from the public rooms into the guest suites. The hotel belongs to Port Harcourt before it belongs to a brand.',
+    ]),
     coverImage: placeholderImage,
     coverImageUrl: '/images/projects/harbourline-hotel.jpg',
+    galleryImageUrls: [
+      {
+        src: '/images/projects/gallery/harbourline-lobby-courtyard.webp',
+        alt: 'Harbourline Hotel lobby arranged around a mature tropical tree',
+        caption: 'The retained tree anchors a sheltered arrival court at the centre of the lobby.',
+      },
+      {
+        src: '/images/projects/gallery/harbourline-guest-room.webp',
+        alt: 'Harbourline Hotel guest room with hardwood screens and Nigerian textiles',
+        caption:
+          'Local timber, terracotta and woven details give the rooms a distinct sense of place.',
+      },
+    ],
     featured: true,
     order: 3,
   },
@@ -350,8 +418,25 @@ export const FALLBACK_PROJECTS: Project[] = [
     duration: '18 months',
     excerpt:
       'A 1970s warehouse stripped to its frame and rebuilt as workspace. We kept the roof trusses and the graffiti on the east wall.',
+    body: projectStory('ogui-story', 'Repair revealed the character', [
+      'The warehouse had the height and toughness the new programme needed. Its damage was selective, so we repaired the frame, cleaned the original trusses and treated the marks on the east wall as part of the building’s memory.',
+      'A lightweight insertion now holds meeting rooms, workshops and services without hiding the old shell. Wide curtains and movable furniture let one floor change from focused work to a public event in minutes.',
+    ]),
     coverImage: placeholderImage,
     coverImageUrl: '/images/projects/ogui-innovation-hub.jpg',
+    galleryImageUrls: [
+      {
+        src: '/images/projects/gallery/ogui-hub-exterior.webp',
+        alt: 'Restored warehouse exterior of Ogui Innovation Hub after rain in Enugu',
+        caption: 'New glass and metal elements sit lightly inside the repaired warehouse shell.',
+      },
+      {
+        src: '/images/projects/gallery/ogui-hub-workspace.webp',
+        alt: 'Flexible shared workspace beneath retained steel trusses at Ogui Innovation Hub',
+        caption:
+          'The original trusses and east-wall graffiti remain visible throughout the shared workspace.',
+      },
+    ],
     featured: true,
     order: 4,
   },
@@ -368,8 +453,25 @@ export const FALLBACK_PROJECTS: Project[] = [
     duration: '20 months',
     excerpt:
       'Deep overhangs, a thermal chimney and rammed-earth walls. In Kano heat the reading room sits eleven degrees below the street.',
+    body: projectStory('nassarawa-story', 'Comfort came from the section', [
+      'The brief asked for a public reading room that could stay useful through heat and power cuts. Thick earth walls slow the day’s heat, deep roofs protect the openings and a high chimney draws warm air out of the centre.',
+      'Courtyards break the library into smaller, shaded rooms where children, students and elders can read at the same time. The building uses familiar materials in a precise new way, so maintenance can remain local.',
+    ]),
     coverImage: placeholderImage,
     coverImageUrl: '/images/projects/nassarawa-civic-library.jpg',
+    galleryImageUrls: [
+      {
+        src: '/images/projects/gallery/nassarawa-library-exterior.webp',
+        alt: 'Low rammed-earth Nassarawa Civic Library with deep shaded walkways in Kano',
+        caption:
+          'Earth walls, deep overhangs and shaded courts form the building’s first line of cooling.',
+      },
+      {
+        src: '/images/projects/gallery/nassarawa-library-reading-room.webp',
+        alt: 'Naturally cooled reading room inside Nassarawa Civic Library',
+        caption: 'High vents and a thermal chimney draw warm air above the occupied reading space.',
+      },
+    ],
     featured: false,
     order: 5,
   },
@@ -386,8 +488,24 @@ export const FALLBACK_PROJECTS: Project[] = [
     duration: '7 months',
     excerpt:
       'We removed four walls and a dropped ceiling. What was left was a lagoon view the original plan had hidden behind a corridor.',
+    body: projectStory('oniru-story', 'The view had been there all along', [
+      'The original plan used its best edge as circulation. We removed four internal walls, collected the services into a compact spine and gave the lagoon back to the rooms where the family spends its time.',
+      'Limestone floors run from the living room onto the planted terrace. Iroko joinery and quiet brass details warm the open plan without competing with the water and changing Lagos sky.',
+    ]),
     coverImage: placeholderImage,
     coverImageUrl: '/images/projects/oniru-penthouse.jpg',
+    galleryImageUrls: [
+      {
+        src: '/images/projects/gallery/oniru-penthouse-living.webp',
+        alt: 'Oniru Penthouse living room opening toward the Lagos lagoon',
+        caption: 'Removing the corridor placed the lagoon at the centre of the living space.',
+      },
+      {
+        src: '/images/projects/gallery/oniru-penthouse-kitchen.webp',
+        alt: 'Open kitchen and dining room facing a planted terrace at Oniru Penthouse',
+        caption: 'Kitchen, dining and terrace now share one uninterrupted line to the water.',
+      },
+    ],
     featured: false,
     order: 6,
   },

@@ -1,0 +1,324 @@
+body[data-gallery-open='true'] {
+  overflow: hidden;
+}
+
+.project-gallery-cover {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: var(--surface-sunken);
+  cursor: zoom-in;
+}
+
+.project-gallery-cover-action {
+  position: absolute;
+  right: clamp(16px, 2vw, 28px);
+  bottom: clamp(16px, 2vw, 28px);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 0 16px;
+  background: rgba(246, 245, 240, 0.92);
+  color: #242620;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  backdrop-filter: blur(12px);
+  transition:
+    transform 280ms var(--ease-expo),
+    background 280ms ease;
+}
+
+.project-gallery-cover:hover .project-gallery-cover-action {
+  transform: translateY(-3px);
+  background: #edc65a;
+}
+
+.project-gallery-cover-action svg,
+.project-lightbox-topbar svg,
+.project-lightbox-arrow svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.project-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 24px);
+}
+
+.project-gallery-tile {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: var(--surface-sunken);
+  cursor: zoom-in;
+}
+
+.project-gallery-tile:first-child {
+  grid-column: 1 / -1;
+  aspect-ratio: 16 / 9;
+}
+
+.project-gallery-tile-number {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  background: rgba(246, 245, 240, 0.9);
+  color: #242620;
+  font-size: 0.65rem;
+  backdrop-filter: blur(10px);
+}
+
+.project-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  background: rgba(12, 13, 11, 0.98);
+  color: #f6f5f0;
+}
+
+.project-lightbox-topbar {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  height: 70px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(18px, 3vw, 48px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.project-lightbox-topbar p {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.project-lightbox-topbar p span:last-child {
+  color: rgba(246, 245, 240, 0.58);
+}
+
+.project-lightbox-topbar button,
+.project-lightbox-arrow {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  transition:
+    border-color 220ms ease,
+    background 220ms ease,
+    color 220ms ease;
+}
+
+.project-lightbox-topbar button:hover,
+.project-lightbox-arrow:hover {
+  border-color: #edc65a;
+  background: #edc65a;
+  color: #171814;
+}
+
+.project-lightbox-stage {
+  position: absolute;
+  top: 86px;
+  right: clamp(72px, 8vw, 132px);
+  bottom: 176px;
+  left: clamp(72px, 8vw, 132px);
+  touch-action: none;
+  user-select: none;
+}
+
+.project-lightbox-slide,
+.project-lightbox-image-frame {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+}
+
+.project-lightbox-arrow {
+  position: absolute;
+  z-index: 3;
+  top: calc(50% - 40px);
+}
+
+.project-lightbox-arrow--left {
+  left: clamp(12px, 2.4vw, 40px);
+}
+
+.project-lightbox-arrow--right {
+  right: clamp(12px, 2.4vw, 40px);
+}
+
+.project-lightbox-bottom {
+  position: absolute;
+  z-index: 3;
+  right: clamp(18px, 3vw, 48px);
+  bottom: 18px;
+  left: clamp(18px, 3vw, 48px);
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
+  align-items: end;
+  gap: 28px;
+}
+
+.project-lightbox-bottom > p {
+  max-width: 48ch;
+  margin: 0;
+  color: rgba(246, 245, 240, 0.68);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.project-lightbox-filmstrip {
+  grid-column: 2;
+  display: flex;
+  max-width: min(52vw, 640px);
+  gap: 9px;
+  overflow-x: auto;
+  padding: 5px;
+  scrollbar-width: none;
+}
+
+.project-lightbox-filmstrip::-webkit-scrollbar {
+  display: none;
+}
+
+.project-lightbox-filmstrip button {
+  position: relative;
+  flex: 0 0 86px;
+  width: 86px;
+  height: 58px;
+  overflow: hidden;
+  border: 1px solid transparent;
+  padding: 3px;
+  background: transparent;
+  opacity: 0.48;
+  transition:
+    opacity 220ms ease,
+    border-color 220ms ease,
+    transform 220ms var(--ease-expo);
+}
+
+.project-lightbox-filmstrip button:hover {
+  opacity: 0.82;
+  transform: translateY(-2px);
+}
+
+.project-lightbox-filmstrip button.is-active {
+  border-color: #edc65a;
+  opacity: 1;
+}
+
+@media (max-width: 767px) {
+  .project-gallery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-gallery-tile,
+  .project-gallery-tile:first-child {
+    grid-column: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .project-gallery-cover-action {
+    min-height: 40px;
+    padding: 0 13px;
+  }
+
+  .project-lightbox-topbar {
+    height: 62px;
+    padding: 0 14px 0 18px;
+  }
+
+  .project-lightbox-topbar p {
+    max-width: calc(100vw - 88px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .project-lightbox-stage {
+    top: 76px;
+    right: 12px;
+    bottom: 178px;
+    left: 12px;
+  }
+
+  .project-lightbox-arrow {
+    top: auto;
+    bottom: 104px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .project-lightbox-arrow--left {
+    left: 14px;
+  }
+
+  .project-lightbox-arrow--right {
+    right: 14px;
+  }
+
+  .project-lightbox-bottom {
+    right: 62px;
+    bottom: 16px;
+    left: 62px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .project-lightbox-bottom > p {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 0.7rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .project-lightbox-filmstrip {
+    max-width: 100%;
+    align-self: center;
+  }
+
+  .project-lightbox-filmstrip button {
+    flex-basis: 66px;
+    width: 66px;
+    height: 46px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-gallery-cover-action,
+  .project-gallery-cover img,
+  .project-gallery-tile img,
+  .project-lightbox-filmstrip button {
+    transition: none !important;
+  }
+}

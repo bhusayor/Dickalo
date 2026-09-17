@@ -20,9 +20,16 @@ export interface SanityImageAsset {
   hotspot?: { x: number; y: number; height: number; width: number };
   crop?: { top: number; bottom: number; left: number; right: number };
   alt?: string;
+  caption?: string;
   /** Low-quality blur placeholder generated at query time. */
   lqip?: string;
   dimensions?: { width: number; height: number; aspectRatio: number };
+}
+
+export interface ProjectGalleryReference {
+  src: string;
+  alt: string;
+  caption?: string;
 }
 
 export interface SanitySlug {
@@ -46,12 +53,7 @@ export interface PortableTextBlock {
 // ---------------------------------------------------------------------------
 
 export type ProjectCategory =
-  | 'residential'
-  | 'commercial'
-  | 'hospitality'
-  | 'interior'
-  | 'mixed-use'
-  | 'institutional';
+  'residential' | 'commercial' | 'hospitality' | 'interior' | 'mixed-use' | 'institutional';
 
 export type ProjectStatus = 'completed' | 'in-progress' | 'concept';
 
@@ -88,6 +90,8 @@ export interface Project {
    */
   coverImageUrl?: string;
   gallery?: SanityImageAsset[];
+  /** Local reference imagery used by the complete fallback portfolio. */
+  galleryImageUrls?: ProjectGalleryReference[];
   /** Key/value stats rendered in the project detail sidebar. */
   facts?: ProjectFact[];
   featured: boolean;
@@ -111,13 +115,7 @@ export interface Service {
   order?: number;
 }
 
-export type ServiceIconKey =
-  | 'draft'
-  | 'build'
-  | 'interior'
-  | 'manage'
-  | 'restore'
-  | 'consult';
+export type ServiceIconKey = 'draft' | 'build' | 'interior' | 'manage' | 'restore' | 'consult';
 
 export interface TeamMember {
   _id: string;
@@ -169,19 +167,9 @@ export interface SiteSettings {
 // ---------------------------------------------------------------------------
 
 export type ProjectType =
-  | 'residential'
-  | 'commercial'
-  | 'interior'
-  | 'renovation'
-  | 'consultancy'
-  | 'other';
+  'residential' | 'commercial' | 'interior' | 'renovation' | 'consultancy' | 'other';
 
-export type BudgetBand =
-  | 'under-25m'
-  | '25m-100m'
-  | '100m-500m'
-  | 'over-500m'
-  | 'not-sure';
+export type BudgetBand = 'under-25m' | '25m-100m' | '100m-500m' | 'over-500m' | 'not-sure';
 
 export interface ContactPayload {
   name: string;

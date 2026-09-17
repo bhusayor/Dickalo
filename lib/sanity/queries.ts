@@ -1,17 +1,7 @@
 import { groq } from 'next-sanity';
 import { sanityFetch } from './client';
-import {
-  FALLBACK_PROJECTS,
-  FALLBACK_TESTIMONIALS,
-  SERVICES,
-} from '@/lib/constants';
-import type {
-  Project,
-  Service,
-  SiteSettings,
-  TeamMember,
-  Testimonial,
-} from '@/lib/types';
+import { FALLBACK_PROJECTS, FALLBACK_TESTIMONIALS, SERVICES } from '@/lib/constants';
+import type { Project, Service, SiteSettings, TeamMember, Testimonial } from '@/lib/types';
 
 /**
  * GROQ queries.
@@ -36,6 +26,7 @@ const imageFragment = groq`{
   hotspot,
   crop,
   alt,
+  caption,
   "lqip": asset->metadata.lqip,
   "dimensions": asset->metadata.dimensions{ width, height, aspectRatio }
 }`;

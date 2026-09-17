@@ -6,6 +6,7 @@ import { ArrowRight, Button } from '@/components/common/Button';
 import { Container } from '@/components/common/Container';
 import { Image } from '@/components/common/Image';
 import { ProjectCard } from '@/components/common/ProjectCard';
+import { ProjectGallery, type ProjectGalleryItem } from '@/components/projects/ProjectGallery';
 import { FadeInScroll } from '@/components/animations/FadeInScroll';
 import { ParallaxSection } from '@/components/animations/ParallaxSection';
 import { StaggerContainer, StaggerItem } from '@/components/animations/StaggerContainer';
@@ -58,11 +59,7 @@ export async function generateMetadata({
     imageAlt: project.coverImage?.alt ?? `${project.title}, ${project.location}`,
     type: 'article',
     noIndex: project.seo?.noIndex,
-    keywords: [
-      project.category,
-      project.location,
-      `${CATEGORY_LABELS[project.category]} Nigeria`,
-    ],
+    keywords: [project.category, project.location, `${CATEGORY_LABELS[project.category]} Nigeria`],
   });
 }
 
@@ -87,6 +84,30 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
     ...(project.duration ? [{ label: 'On site', value: project.duration }] : []),
     ...(project.facts ?? []),
   ];
+
+  const galleryImages: ProjectGalleryItem[] = [
+    {
+      id: `${project.slug}-cover`,
+      source: project.coverImage,
+      src: project.coverImageUrl,
+      alt: project.coverImage?.alt || `${project.title}, ${project.location}`,
+      caption: project.tagline,
+    },
+    ...(project.gallery ?? []).map((image, index) => ({
+      id: image.asset?._ref || `${project.slug}-gallery-${index}`,
+      source: image,
+      alt: image.alt || `${project.title}, view ${index + 2}`,
+      caption: image.caption,
+    })),
+    ...(project.galleryImageUrls ?? []).map((image, index) => ({
+      id: `${project.slug}-reference-${index}`,
+      src: image.src,
+      alt: image.alt,
+      caption: image.caption,
+    })),
+  ];
+
+  const usesReferenceImagery = Boolean(project.galleryImageUrls?.length);
 
   return (
     <>
@@ -179,17 +200,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
             scale
             className="h-[52vh] min-h-[20rem] overflow-hidden rounded-xl lg:h-[76vh]"
           >
-            <Image
-              source={project.coverImage}
-              src={project.coverImageUrl}
-              alt={project.coverImage?.alt || `${project.title}, ${project.location}`}
-              fill
-              priority
-              cdnWidth={2400}
-              sizes="100vw"
-              ratio="auto"
-              wrapperClassName="h-full w-full"
-            />
+            <ProjectGallery images={galleryImages} projectTitle={project.title} variant="cover" />
           </ParallaxSection>
         </div>
       </header>
@@ -199,7 +210,9 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
         <Container>
           <div className="grid gap-14 lg:grid-cols-[1fr_20rem] lg:gap-20">
             <FadeInScroll className="order-2 lg:order-1">
-              <p className="prose-dickalo mb-10 text-body-lg text-content-primary">{project.excerpt}</p>
+              <p className="prose-dickalo mb-10 text-body-lg text-content-primary">
+                {project.excerpt}
+              </p>
 
               {project.body?.length ? (
                 <div className="prose-dickalo">
@@ -219,9 +232,7 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
                               sizes="(max-width: 1024px) 100vw, 900px"
                               wrapperClassName="rounded-md"
                             />
-                            {value?.caption ? (
-                              <figcaption>{value.caption}</figcaption>
-                            ) : null}
+                            {value?.caption ? <figcaption>{value.caption}</figcaption> : null}
                           </figure>
                         ),
                       },
@@ -297,38 +308,21 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
       </section>
 
       {/* --- Gallery -------------------------------------------------------- */}
-      {project.gallery?.length ? (
+      {galleryImages.length > 1 ? (
         <section className="pb-section" aria-labelledby="gallery-heading">
           <Container>
-            <h2 id="gallery-heading" className="eyebrow eyebrow--muted mb-8">
-              Photographs
-            </h2>
+            <div className="mb-8 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+              <h2 id="gallery-heading" className="eyebrow eyebrow--muted">
+                Project gallery
+              </h2>
+              <p className="max-w-md text-body-sm text-content-muted">
+                {usesReferenceImagery
+                  ? 'Design reference imagery showing the intended spaces, materials and atmosphere.'
+                  : 'Select any image to explore the project in full screen.'}
+              </p>
+            </div>
 
-            <StaggerContainer stagger={0.08} className="grid gap-6 md:grid-cols-2">
-              {project.gallery.map((image, index) => (
-                <StaggerItem
-                  key={image.asset?._ref ?? index}
-                  // Every third image runs full width, which stops a long
-                  // gallery reading as an undifferentiated grid.
-                  className={index % 3 === 0 ? 'md:col-span-2' : ''}
-                >
-                  <Image
-                    source={image}
-                    alt={image.alt || `${project.title}, photograph ${index + 1}`}
-                    ratio={index % 3 === 0 ? '16/9' : '4/3'}
-                    reveal
-                    cdnWidth={index % 3 === 0 ? 2000 : 1200}
-                    sizes={
-                      index % 3 === 0
-                        ? '(max-width: 768px) 100vw, 1400px'
-                        : '(max-width: 768px) 100vw, 700px'
-                    }
-                    zoom
-                    wrapperClassName="rounded-md"
-                  />
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
+            <ProjectGallery images={galleryImages} projectTitle={project.title} />
           </Container>
         </section>
       ) : null}
@@ -338,7 +332,10 @@ export default async function ProjectDetailPage({ params }: { params: { slug: st
         <section className="border-t border-line py-section" aria-labelledby="related-heading">
           <Container>
             <div className="mb-10 flex items-end justify-between gap-8">
-              <h2 id="related-heading" className="font-display text-display-sm text-content-primary">
+              <h2
+                id="related-heading"
+                className="font-display text-display-sm text-content-primary"
+              >
                 More like this
               </h2>
               <Button href="/projects" variant="ghost" iconRight={<ArrowRight />}>
