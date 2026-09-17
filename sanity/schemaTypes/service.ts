@@ -14,9 +14,9 @@ export const service = defineType({
     }),
     defineField({
       name: 'slug',
-      title: 'Anchor',
+      title: 'URL slug',
       type: 'slug',
-      description: 'Used to link to this service from elsewhere on the site.',
+      description: 'Used for the standalone service page URL.',
       options: { source: 'title', maxLength: 60 },
       validation: (rule) => rule.required(),
     }),
@@ -75,7 +75,9 @@ export const service = defineType({
       description: 'Lower numbers appear first.',
     }),
   ],
-  orderings: [{ title: 'Sort order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],
+  orderings: [
+    { title: 'Sort order', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] },
+  ],
   preview: {
     select: { title: 'title', subtitle: 'summary', media: 'image' },
   },

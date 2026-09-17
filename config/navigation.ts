@@ -50,10 +50,10 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
   {
     title: 'Services',
     links: [
-      { label: 'Architectural design', href: '/services#architectural-design' },
-      { label: 'Construction', href: '/services#construction' },
-      { label: 'Interior architecture', href: '/services#interior-architecture' },
-      { label: 'Project management', href: '/services#project-management' },
+      { label: 'Architectural design', href: '/services/architectural-design' },
+      { label: 'Construction', href: '/services/construction' },
+      { label: 'Interior architecture', href: '/services/interior-architecture' },
+      { label: 'Project management', href: '/services/project-management' },
     ],
   },
   {

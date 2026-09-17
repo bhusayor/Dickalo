@@ -69,17 +69,29 @@ export function Navbar() {
               Home
             </Link>
             {mainNav.map((link) => {
-              const children =
-                link.href === '/services'
-                  ? SERVICES.map((service) => ({
+              const isServices = link.href === '/services';
+              const children = isServices
+                ? [
+                    { label: 'View all services', href: '/services' },
+                    ...SERVICES.map((service) => ({
                       label: service.title,
-                      href: `/services#${service.slug}`,
-                    }))
-                  : link.children;
+                      href: `/services/${service.slug}`,
+                    })),
+                  ]
+                : link.children;
               return (
                 <div
                   key={link.href}
                   className="nav-item"
+                  onMouseEnter={() => {
+                    if (children) setDropdown(link.label);
+                  }}
+                  onMouseLeave={() => {
+                    if (children) setDropdown(null);
+                  }}
+                  onFocusCapture={() => {
+                    if (children) setDropdown(link.label);
+                  }}
                   onBlur={(event) => {
                     if (!event.currentTarget.contains(event.relatedTarget))
                       setDropdown((current) => (current === link.label ? null : current));
@@ -110,7 +122,7 @@ export function Navbar() {
                       </button>
                       <div
                         id={`nav-${link.label}`}
-                        className="nav-dropdown"
+                        className={`nav-dropdown ${isServices ? 'nav-dropdown--services' : ''}`}
                         hidden={dropdown !== link.label}
                       >
                         <span className="micro-label">Explore {link.label.toLowerCase()}</span>
@@ -118,12 +130,30 @@ export function Navbar() {
                           <Link
                             key={child.href}
                             href={child.href}
+                            className={
+                              isServices && child.href === '/services'
+                                ? 'nav-dropdown-overview'
+                                : undefined
+                            }
                             onClick={() => setDropdown(null)}
                           >
                             {child.label}
                             <ArrowUpRight />
                           </Link>
                         ))}
+                        {isServices ? (
+                          <Link
+                            href="/contact"
+                            className="nav-dropdown-cta"
+                            onClick={() => setDropdown(null)}
+                          >
+                            <span>
+                              <strong>Discuss your project</strong>
+                              <small>Tell us what you are planning.</small>
+                            </span>
+                            <ArrowUpRight />
+                          </Link>
+                        ) : null}
                       </div>
                     </>
                   )}

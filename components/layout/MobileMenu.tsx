@@ -3,11 +3,13 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Button } from '@/components/common/Button';
+import { ChevronDown } from '@/components/common/NavigationIcons';
 import { siteConfig } from '@/config/site';
 import { mainNav, legalNav } from '@/config/navigation';
 import { menuItem, menuPanel, overlayBackdrop } from '@/lib/animations/transitions';
+import { SERVICES } from '@/lib/constants';
 import { useSmoothScroll } from './SmoothScrollProvider';
 import { cn } from '@/lib/utils';
 
@@ -29,6 +31,7 @@ export interface MobileMenuProps {
 export function MobileMenu({ open, onClose }: MobileMenuProps) {
   const pathname = usePathname();
   const reduce = useReducedMotion();
+  const [servicesOpen, setServicesOpen] = useState(pathname.startsWith('/services'));
   const panelRef = useRef<HTMLDivElement>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
   const { stop, start } = useSmoothScroll();
@@ -36,6 +39,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
   // Close on route change — the panel would otherwise stay open over the new page.
   useEffect(() => {
     if (open) onClose();
+    if (pathname.startsWith('/services')) setServicesOpen(true);
     // Intentionally keyed on pathname only.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
@@ -158,6 +162,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                 </li>
                 {mainNav.map((link, index) => {
                   const active = pathname === link.href || pathname?.startsWith(`${link.href}/`);
+                  const isServices = link.href === '/services';
 
                   return (
                     <motion.li
@@ -169,33 +174,100 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
                       exit={reduce ? undefined : 'exit'}
                       className="border-b border-line"
                     >
-                      <Link
-                        href={link.href}
-                        onClick={onClose}
-                        className="group flex items-baseline justify-between gap-4 py-5"
-                        aria-current={active ? 'page' : undefined}
-                      >
-                        <span className="flex flex-col gap-1">
-                          <span
-                            className={cn(
-                              'font-display text-display-sm transition-colors',
-                              active
-                                ? 'text-content-accent'
-                                : 'text-content-primary group-hover:text-content-accent',
-                            )}
-                          >
-                            {link.label}
+                      <div className="flex items-stretch gap-2">
+                        <Link
+                          href={link.href}
+                          onClick={onClose}
+                          className="group flex min-w-0 flex-1 items-baseline justify-between gap-4 py-5"
+                          aria-current={active ? 'page' : undefined}
+                        >
+                          <span className="flex min-w-0 flex-col gap-1">
+                            <span
+                              className={cn(
+                                'font-display text-display-sm transition-colors',
+                                active
+                                  ? 'text-content-accent'
+                                  : 'text-content-primary group-hover:text-content-accent',
+                              )}
+                            >
+                              {link.label}
+                            </span>
+                            {link.description ? (
+                              <span className="text-body-sm text-content-muted">
+                                {link.description}
+                              </span>
+                            ) : null}
                           </span>
-                          {link.description ? (
-                            <span className="text-body-sm text-content-muted">
-                              {link.description}
+                          {!isServices ? (
+                            <span className="numeric shrink-0 pt-2 text-caption text-content-accent/60">
+                              {String(index + 1).padStart(2, '0')}
                             </span>
                           ) : null}
-                        </span>
-                        <span className="numeric shrink-0 pt-2 text-caption text-content-accent/60">
-                          {String(index + 1).padStart(2, '0')}
-                        </span>
-                      </Link>
+                        </Link>
+
+                        {isServices ? (
+                          <button
+                            type="button"
+                            className="grid w-12 shrink-0 place-items-center text-content-primary"
+                            aria-label="Show service pages"
+                            aria-expanded={servicesOpen}
+                            aria-controls="mobile-service-links"
+                            onClick={() => setServicesOpen((current) => !current)}
+                          >
+                            <span
+                              className={cn(
+                                'transition-transform duration-300 ease-expo',
+                                servicesOpen && 'rotate-180',
+                              )}
+                            >
+                              <ChevronDown />
+                            </span>
+                          </button>
+                        ) : null}
+                      </div>
+
+                      {isServices ? (
+                        <AnimatePresence initial={false}>
+                          {servicesOpen ? (
+                            <motion.div
+                              id="mobile-service-links"
+                              initial={reduce ? false : { height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={reduce ? undefined : { height: 0, opacity: 0 }}
+                              transition={{ duration: reduce ? 0 : 0.32, ease: [0.16, 1, 0.3, 1] }}
+                              className="overflow-hidden"
+                            >
+                              <div className="grid gap-1 pb-5 pl-4">
+                                <Link
+                                  href="/services"
+                                  onClick={onClose}
+                                  className="py-2 text-body-sm font-medium text-content-accent"
+                                >
+                                  View all services
+                                </Link>
+                                {SERVICES.map((service) => (
+                                  <Link
+                                    key={service.slug}
+                                    href={`/services/${service.slug}`}
+                                    onClick={onClose}
+                                    className="border-l border-line py-2 pl-4 text-body-sm text-content-secondary transition-colors hover:border-content-accent hover:text-content-accent"
+                                  >
+                                    {service.title}
+                                  </Link>
+                                ))}
+                                <Link
+                                  href="/contact"
+                                  onClick={onClose}
+                                  className="brand-button mt-3 flex min-h-11 items-center justify-between px-4 text-body-sm"
+                                >
+                                  Discuss your project
+                                  <ArrowRight />
+                                </Link>
+                              </div>
+                            </motion.div>
+                          ) : null}
+                        </AnimatePresence>
+                      ) : null}
                     </motion.li>
                   );
                 })}

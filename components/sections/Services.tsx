@@ -115,11 +115,11 @@ export function Services({ services, variant = 'compact', showHeading = true }: 
                           </ul>
                         ) : null}
                         <Button
-                          href="/contact"
+                          href={`/services/${service.slug}`}
                           size="sm"
                           iconRight={<span aria-hidden="true">↗</span>}
                         >
-                          Discuss your project
+                          Explore {service.title.toLowerCase()}
                         </Button>
                       </div>
                     </div>

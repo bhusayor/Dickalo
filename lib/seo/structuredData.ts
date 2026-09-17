@@ -137,7 +137,8 @@ export function serviceSchema(service: Service): Json {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
-    '@id': `${siteConfig.url}/services#${service.slug}`,
+    '@id': `${siteConfig.url}/services/${service.slug}#service`,
+    url: `${siteConfig.url}/services/${service.slug}`,
     name: service.title,
     description: service.summary,
     serviceType: service.title,
@@ -184,8 +185,7 @@ export function reviewSchema(testimonials: Testimonial[]): Json | null {
   const rated = testimonials.filter((t) => typeof t.rating === 'number');
   if (rated.length === 0) return null;
 
-  const average =
-    rated.reduce((sum, t) => sum + (t.rating ?? 0), 0) / rated.length;
+  const average = rated.reduce((sum, t) => sum + (t.rating ?? 0), 0) / rated.length;
 
   return {
     '@context': 'https://schema.org',

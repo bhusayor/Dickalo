@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getProjectSlugs } from '@/lib/sanity/queries';
+import { SERVICES } from '@/lib/constants';
 import { absoluteUrl } from '@/lib/utils';
 
 /**
@@ -20,6 +21,11 @@ export const STATIC_ROUTES: Route[] = [
   { path: '/', priority: 1.0, changeFrequency: 'monthly' },
   { path: '/projects', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/services', priority: 0.8, changeFrequency: 'monthly' },
+  ...SERVICES.map((service) => ({
+    path: `/services/${service.slug}`,
+    priority: 0.75,
+    changeFrequency: 'monthly' as const,
+  })),
   { path: '/about', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/about/team', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/contact', priority: 0.8, changeFrequency: 'yearly' },

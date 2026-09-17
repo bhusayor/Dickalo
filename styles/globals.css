@@ -9,6 +9,7 @@
 @import './animations.css';
 @import './redesign.css';
 @import './project-gallery.css';
+@import './service-detail.css';
 
 @tailwind base;
 @tailwind components;

@@ -5,16 +5,15 @@ import { Services } from '@/components/sections/Services';
 import { FadeInScroll } from '@/components/animations/FadeInScroll';
 import { getServices } from '@/lib/sanity/queries';
 import { REVALIDATE_SECONDS } from '@/lib/constants';
-import { jsonLdScript, serviceSchema } from '@/lib/seo/structuredData';
+import { breadcrumbSchema, jsonLdScript, serviceSchema } from '@/lib/seo/structuredData';
 
 export const revalidate = REVALIDATE_SECONDS;
 
 /**
  * Services overview.
  *
- * One page for all six services rather than six thin pages. Someone choosing a
- * contractor wants to compare, and comparison across six navigations is
- * comparison nobody does.
+ * Comparison page for all six services. Each row now leads to a focused page
+ * for clients who need scope, process, examples and answers before enquiring.
  */
 export default async function ServicesPage() {
   const services = await getServices();
@@ -24,7 +23,13 @@ export default async function ServicesPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: jsonLdScript(services.map(serviceSchema)),
+          __html: jsonLdScript([
+            ...services.map(serviceSchema),
+            breadcrumbSchema([
+              { name: 'Home', path: '/' },
+              { name: 'Services', path: '/services' },
+            ]),
+          ]),
         }}
       />
 
