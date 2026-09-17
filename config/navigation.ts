@@ -21,13 +21,9 @@ export const mainNav: NavLink[] = [
     description: 'Design, build, interiors and everything in between.',
   },
   {
-    label: 'About',
+    label: 'Studio',
     href: '/about',
-    description: 'Who we are and how we run a site.',
-    children: [
-      { label: 'The studio', href: '/about', description: 'How DICKALO works.' },
-      { label: 'Team', href: '/about/team', description: 'The people on your project.' },
-    ],
+    description: 'Our Ilorin base, nationwide work and the team behind it.',
   },
   {
     label: 'Contact',
@@ -59,8 +55,8 @@ export const footerNav: { title: string; links: NavLink[] }[] = [
   {
     title: 'Studio',
     links: [
-      { label: 'About us', href: '/about' },
-      { label: 'Our team', href: '/about/team' },
+      { label: 'The studio', href: '/about' },
+      { label: 'Our team', href: '/about#team' },
       { label: 'Contact', href: '/contact' },
       { label: 'Careers', href: `mailto:${siteConfig.contact.careersEmail}` },
     ],

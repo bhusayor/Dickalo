@@ -10,6 +10,7 @@
 @import './redesign.css';
 @import './project-gallery.css';
 @import './service-detail.css';
+@import './studio-page.css';
 
 @tailwind base;
 @tailwind components;

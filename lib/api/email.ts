@@ -52,7 +52,9 @@ function esc(value: string | undefined | null): string {
 function paragraphs(text: string): string {
   return esc(text)
     .split(/\n{2,}/)
-    .map((block) => `<p style="margin:0 0 14px;line-height:1.65;">${block.replace(/\n/g, '<br>')}</p>`)
+    .map(
+      (block) => `<p style="margin:0 0 14px;line-height:1.65;">${block.replace(/\n/g, '<br>')}</p>`,
+    )
     .join('');
 }
 
@@ -118,7 +120,11 @@ function detailRow(label: string, value: string): string {
 // Studio notification
 // ---------------------------------------------------------------------------
 
-export function buildStudioNotification(input: ContactInput): { subject: string; html: string; text: string } {
+export function buildStudioNotification(input: ContactInput): {
+  subject: string;
+  html: string;
+  text: string;
+} {
   const projectType = labelFor(PROJECT_TYPE_OPTIONS, input.projectType);
   const budget = labelFor(BUDGET_OPTIONS, input.budget);
 
@@ -179,7 +185,11 @@ export function buildStudioNotification(input: ContactInput): { subject: string;
 // Visitor acknowledgement
 // ---------------------------------------------------------------------------
 
-export function buildAcknowledgement(input: ContactInput): { subject: string; html: string; text: string } {
+export function buildAcknowledgement(input: ContactInput): {
+  subject: string;
+  html: string;
+  text: string;
+} {
   const firstName = input.name.split(' ')[0] ?? input.name;
   const subject = 'We have your enquiry — DICKALO';
 
@@ -203,7 +213,7 @@ export function buildAcknowledgement(input: ContactInput): { subject: string; ht
 
     <p style="margin:24px 0 0;font-size:16px;line-height:1.65;">
       — The team at DICKALO<br>
-      <span style="color:${INK};font-size:14px;">${esc(siteConfig.address.street)}, ${esc(siteConfig.address.district)}, ${esc(siteConfig.address.city)}</span>
+      <span style="color:${INK};font-size:14px;">${esc(siteConfig.address.city)}, ${esc(siteConfig.address.state)}, ${esc(siteConfig.address.country)}</span>
     </p>`;
 
   const footer = `You are receiving this because you sent an enquiry through ${esc(siteConfig.url)}. We only use your details to answer it.`;
@@ -217,7 +227,7 @@ export function buildAcknowledgement(input: ContactInput): { subject: string; ht
     input.message,
     '',
     '— The team at DICKALO',
-    `${siteConfig.address.street}, ${siteConfig.address.district}, ${siteConfig.address.city}`,
+    `${siteConfig.address.city}, ${siteConfig.address.state}, ${siteConfig.address.country}`,
   ].join('\n');
 
   return { subject, html: shell(subject, body, footer), text };
@@ -227,7 +237,11 @@ export function buildAcknowledgement(input: ContactInput): { subject: string; ht
 // Newsletter welcome
 // ---------------------------------------------------------------------------
 
-export function buildSubscribeWelcome(email: string): { subject: string; html: string; text: string } {
+export function buildSubscribeWelcome(email: string): {
+  subject: string;
+  html: string;
+  text: string;
+} {
   const subject = 'You are on the list — DICKALO';
 
   const body = `

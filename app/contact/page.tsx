@@ -99,11 +99,11 @@ export default function ContactPage() {
                 <div className="flex flex-col gap-3 border-t border-line pt-8">
                   <h2 className="eyebrow eyebrow--muted">The studio</h2>
                   <address className="text-body-md not-italic leading-relaxed text-content-secondary">
-                    {siteConfig.address.street}
+                    {siteConfig.address.city}, {siteConfig.address.state}
                     <br />
-                    {siteConfig.address.district}
+                    {siteConfig.address.country}
                     <br />
-                    {siteConfig.address.city}, {siteConfig.address.country}
+                    Available for projects nationwide
                   </address>
                   <a
                     href={siteConfig.address.mapsUrl}

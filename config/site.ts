@@ -36,7 +36,7 @@ export const siteConfig = {
   tagline: 'Architecture & Construction',
   /** The one line that has to do the most work: search results, OG cards, footer. */
   description:
-    'DICKALO is a Nigerian architecture and construction firm. We design buildings, we build them, and we hand over on the date we promised — in Lagos, Abuja, Port Harcourt and beyond.',
+    'DICKALO is an architecture and construction firm based in Ilorin and available for projects nationwide. We design buildings, build them and stay accountable through handover.',
   shortDescription: 'Architecture and construction firm working across Nigeria.',
   url: siteUrl,
   locale: 'en_NG',
@@ -56,29 +56,21 @@ export const siteConfig = {
   },
 
   /**
-   * Head office. DICKALO works nationally, so this is where the post goes and
-   * where the drawings are done — not the limit of where we build. The regional
-   * offices below matter more to someone deciding whether we can reach them.
+   * The studio is based in Ilorin. A full street address has not been published,
+   * so public-facing surfaces use the city and state without inventing one.
    */
   address: {
-    street: '14 Ligali Ayorinde Street',
-    district: 'Victoria Island',
-    city: 'Lagos',
-    state: 'Lagos State',
-    postalCode: '106104',
+    city: 'Ilorin',
+    state: 'Kwara State',
     country: 'Nigeria',
     countryCode: 'NG',
-    latitude: 6.4281,
-    longitude: 3.4219,
-    mapsUrl: 'https://maps.google.com/?q=Ligali+Ayorinde+Street+Victoria+Island+Lagos',
+    latitude: 8.4966,
+    longitude: 4.5421,
+    mapsUrl: 'https://maps.google.com/?q=Ilorin+Kwara+State+Nigeria',
   },
 
-  /** Where we keep people permanently, as opposed to where we can work. */
-  offices: [
-    { city: 'Lagos', label: 'Head office', detail: 'Victoria Island', primary: true },
-    { city: 'Abuja', label: 'Regional office', detail: 'Wuse II', primary: false },
-    { city: 'Port Harcourt', label: 'Regional office', detail: 'Old GRA', primary: false },
-  ],
+  /** Where the permanent studio is based. Project teams travel nationwide. */
+  offices: [{ city: 'Ilorin', label: 'Studio', detail: 'Kwara State', primary: true }],
 
   hours: {
     label: 'Monday to Friday, 8:30am – 6:00pm WAT',
@@ -103,10 +95,20 @@ export const siteConfig = {
    * States we have actually built in. Used in the footer and in JSON-LD.
    * Listing somewhere we have never worked is the kind of claim a client checks.
    */
-  serviceAreas: ['Lagos', 'Abuja (FCT)', 'Rivers', 'Enugu', 'Kano', 'Oyo', 'Delta', 'Akwa Ibom'],
+  serviceAreas: [
+    'Kwara',
+    'Lagos',
+    'Abuja (FCT)',
+    'Rivers',
+    'Enugu',
+    'Kano',
+    'Oyo',
+    'Delta',
+    'Akwa Ibom',
+  ],
 
   /** Shown wherever we need to say "national" without listing eight states. */
-  coverage: 'Lagos, Abuja, Port Harcourt and across Nigeria',
+  coverage: 'Based in Ilorin and available for work nationwide',
 } as const;
 
 /**
@@ -118,14 +120,13 @@ export const heroCopy = {
   /**
    * Two lines, one size, one colour.
    *
-   * "in Nigeria" rather than "in Lagos": the firm builds nationally, and a
-   * client in Abuja or Port Harcourt reading a Lagos-only headline assumes,
-   * correctly, that they are not being spoken to.
+   * National language makes the Ilorin base clear without implying that it
+   * limits where the studio can accept work.
    */
   headline: ['We design buildings', 'across Nigeria, then', 'we build them.'],
   headlineFlat: 'We design buildings across Nigeria, then we build them.',
   subhead:
-    'One team, one contract, and the person who signed it is the person who answers your call — in Lagos, Abuja, Port Harcourt or wherever your site is.',
+    'Based in Ilorin and available nationwide. One team carries the work from the first drawing to the final handover, wherever your site is in Nigeria.',
   primaryCta: { label: 'Start a project', href: '/contact' },
   secondaryCta: { label: 'See our work', href: '/projects' },
   scrollHint: 'Scroll',
@@ -134,7 +135,7 @@ export const heroCopy = {
   /** Proof, in the corner. Facts rather than adjectives. */
   markers: [
     { value: '120+', label: 'Projects delivered' },
-    { value: '8', label: 'States built in' },
+    { value: 'Nigeria', label: 'Available nationwide' },
     { value: '96%', label: 'On the contract date' },
   ],
   /** The floating card. A real link to a real project. */
@@ -154,7 +155,7 @@ export const brandStatements = {
     'Most projects in Nigeria fail on the handover date, not the drawing. We took the drawing and the build under one roof so there is nobody left to blame.',
   /** About page opener. */
   aboutIntro:
-    'DICKALO started in 2011 with one contract and three people. We now run design and construction out of three offices — Lagos, Abuja and Port Harcourt — which means the person who drew your ceiling detail can be on your site the week it goes in, wherever that site is.',
+    'DICKALO is based in Ilorin and works nationwide. Design, technical coordination and site delivery stay connected, so the person who resolves a detail can follow it through on projects across Nigeria.',
   /** Footer sign-off. */
   footerNote: 'Drawn, built and handed over across Nigeria.',
 } as const;

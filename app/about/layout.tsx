@@ -14,7 +14,7 @@ export default function AboutLayout({ children }: { children: ReactNode }) {
           __html: jsonLdScript(
             breadcrumbSchema([
               { name: 'Home', path: '/' },
-              { name: 'About', path: '/about' },
+              { name: 'Studio', path: '/about' },
             ]),
           ),
         }}

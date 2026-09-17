@@ -124,6 +124,8 @@ export interface TeamMember {
   /** Two sentences maximum. Says what they do, not how passionate they are. */
   bio?: string;
   image?: SanityImageAsset;
+  /** Local portrait used by the fallback team when Sanity is unconfigured. */
+  imageUrl?: string;
   credentials?: string[];
   linkedin?: string;
   email?: string;

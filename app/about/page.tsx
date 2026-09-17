@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import { ArrowRight, Button } from '@/components/common/Button';
 import { Container } from '@/components/common/Container';
 import { Image } from '@/components/common/Image';
 import { PageHeader } from '@/components/common/PageHeader';
@@ -8,34 +6,36 @@ import { ParallaxSection } from '@/components/animations/ParallaxSection';
 import { CTA } from '@/components/sections/CTA';
 import { Stats } from '@/components/sections/Stats';
 import { Team } from '@/components/sections/Team';
-import { brandStatements, siteConfig } from '@/config/site';
-import { getTeam } from '@/lib/sanity/queries';
+import { siteConfig } from '@/config/site';
 import { REVALIDATE_SECONDS } from '@/lib/constants';
+import { getTeam } from '@/lib/sanity/queries';
+import { jsonLdScript, personSchema } from '@/lib/seo/structuredData';
 
 export const revalidate = REVALIDATE_SECONDS;
 
-/**
- * What we will and will not do. Stating the limits plainly filters out the
- * enquiries that waste everyone's time, and the specificity is what makes the
- * positive claims believable.
- */
 const PRINCIPLES = [
   {
-    title: 'The date in the contract is the date',
-    body: 'We build float into the programme before you sign it, not excuses after. When a date is genuinely at risk you hear it that Friday, with what we are doing about it.',
+    title: 'One team owns the whole answer',
+    body: 'Architecture, construction and interiors sit together in Ilorin. Decisions move between the drawing table and the site without being lost between separate companies.',
   },
   {
-    title: 'One number, and it moves for reasons',
-    body: 'Our price includes what we know will be needed, not the cheapest defensible version of it. If it changes, you get the reason and the receipt before the work happens.',
+    title: 'The site changes the design',
+    body: 'Climate, access, local skills and available materials shape every project. We design for the place where the building will stand, not for a generic presentation image.',
   },
   {
-    title: 'We say no to work we would do badly',
-    body: 'We turn down two or three projects a year because the budget cannot buy what the brief describes. Saying that early costs us a job and saves you eighteen months.',
+    title: 'Distance needs a clear system',
+    body: 'For projects outside Kwara, we establish the right resident site team, reporting rhythm and procurement route before work begins. Nationwide delivery is planned, not improvised.',
   },
   {
-    title: 'Built for the climate, not the photograph',
-    body: 'Salt air on the coast, harmattan dust in the north, and heat everywhere. We detail for the climate the building is actually in. That is why our work still looks right at year ten, when buildings designed for the render have started to stain.',
+    title: 'We speak before a risk becomes a delay',
+    body: 'Every active project has a visible programme, cost position and decision list. When something changes, the client hears the reason and the proposed action early.',
   },
+];
+
+const STUDIO_FACTS = [
+  { label: 'Based', value: 'Ilorin, Kwara State' },
+  { label: 'Available', value: 'Nationwide' },
+  { label: 'Experience', value: 'Projects across Nigeria' },
 ];
 
 export default async function AboutPage() {
@@ -43,66 +43,120 @@ export default async function AboutPage() {
 
   return (
     <>
-      <PageHeader
-        eyebrow="About the studio"
-        title="We are the architect and the contractor."
-        description={brandStatements.aboutIntro}
-        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'About' }]}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(team.map(personSchema)) }}
       />
 
-      {/* --- Studio image --------------------------------------------------- */}
-      <section className="bg-surface-base">
-        <ParallaxSection speed={0.14} scale className="h-[45vh] min-h-[20rem] lg:h-[65vh]">
-          <Image
-            src="/images/studio.jpg"
-            alt="The DICKALO studio in Victoria Island, Lagos"
-            reveal
-            fill
-            priority
-            ratio="auto"
-            sizes="100vw"
-            wrapperClassName="h-full w-full"
-          />
-        </ParallaxSection>
-      </section>
+      <PageHeader
+        eyebrow="The studio"
+        title="Based in Ilorin. Built to work across Nigeria."
+        description="DICKALO is an architecture and construction practice with one permanent base in Ilorin and project experience across Nigeria. We bring design, technical coordination and site delivery into one accountable team."
+        breadcrumbs={[{ label: 'Home', href: '/' }, { label: 'Studio' }]}
+        titleClassName="max-w-[15ch]"
+      />
 
-      {/* --- Story ---------------------------------------------------------- */}
-      <section className="section-space bg-surface-base">
+      <section className="studio-page-hero bg-surface-base">
         <Container>
-          <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24">
-            <FadeInScroll>
-              <h2 className="text-balance font-display text-display-sm text-content-primary">
-                Why both, and not one or the other
-              </h2>
-            </FadeInScroll>
-
-            <FadeInScroll delay={0.1} className="prose-dickalo">
-              <p>
-                DICKALO started in {siteConfig.founded} with a single house in Ikoyi and three
-                people, two of whom were on site every day. The reason we took the construction as
-                well as the design was not ambition. It was that the previous contractor had walked
-                off, and finishing it ourselves was the only way the client was ever going to move
-                in.
-              </p>
-              <p>
-                We have kept that arrangement since, and the reason is unglamorous: when the same
-                firm draws the detail and installs it, there is nobody to blame and therefore nobody
-                trying to. Coordination problems get solved in a corridor conversation instead of a
-                claim.
-              </p>
-              <p>
-                Today we are {team.length > 0 ? '42 people' : 'a full team'} across design,
-                engineering, site management and interiors, working out of three offices in Lagos,
-                Abuja and Port Harcourt. Everyone who draws your building has stood on a site in the
-                rain, and it shows in the drawings.
-              </p>
-            </FadeInScroll>
+          <ParallaxSection speed={0.1} scale className="studio-page-hero-frame">
+            <Image
+              src="/images/studio/ilorin-studio.webp"
+              alt="Nigerian architects and construction professionals working around a model in an Ilorin design studio"
+              fill
+              priority
+              sizes="100vw"
+              wrapperClassName="h-full w-full"
+            />
+          </ParallaxSection>
+          <div className="studio-page-hero-caption">
+            <span>Ilorin studio / Kwara State</span>
+            <span>Design, construction and interiors under one roof</span>
           </div>
         </Container>
       </section>
 
-      {/* --- Principles ----------------------------------------------------- */}
-      <section className="section-space bg-surface-raised" aria-labelledby="principles-heading">
+      <section className="studio-page-story section-space bg-surface-base">
+        <Container>
+          <div className="studio-page-story-grid">
+            <FadeInScroll>
+              <p className="micro-label">
+                <span className="label-dot" /> Where we work
+              </p>
+              <h2>Rooted in one place. Ready for many.</h2>
+            </FadeInScroll>
+
+            <FadeInScroll delay={0.1} className="studio-page-story-copy">
+              <p>
+                Ilorin is our working base. It is where briefs become drawings, materials are tested
+                and the design and construction teams sit close enough to solve problems in the same
+                conversation.
+              </p>
+              <p>
+                Our reach is national. We have worked on projects in different states and organise
+                each commission around its actual location, programme and supply chain. When the
+                site is outside Kwara, the site team lives close to the work and the Ilorin studio
+                remains connected through scheduled reviews and clear weekly reporting.
+              </p>
+              <p>
+                That balance matters to us: the continuity of one permanent studio, with the
+                practical ability to mobilise wherever the right project is in Nigeria.
+              </p>
+            </FadeInScroll>
+          </div>
+
+          <dl className="studio-page-facts">
+            {STUDIO_FACTS.map((fact, index) => (
+              <FadeInScroll key={fact.label} as="div" delay={index * 0.08}>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
+              </FadeInScroll>
+            ))}
+          </dl>
+        </Container>
+      </section>
+
+      <section className="studio-page-practice bg-surface-raised">
+        <Container>
+          <div className="studio-page-practice-grid">
+            <FadeInScroll className="studio-page-practice-image studio-page-practice-image--large">
+              <Image
+                src="/images/studio/nationwide-site-review.webp"
+                alt="DICKALO architects and construction professionals reviewing drawings on a Nigerian building site"
+                fill
+                sizes="(max-width: 900px) 100vw, 60vw"
+                wrapperClassName="h-full w-full"
+              />
+              <span>On site / Nigeria</span>
+            </FadeInScroll>
+
+            <div className="studio-page-practice-side">
+              <FadeInScroll direction="right" className="studio-page-practice-copy">
+                <p className="micro-label">
+                  <span className="label-dot" /> Studio to site
+                </p>
+                <h2>The detail travels with the team.</h2>
+                <p>
+                  We use models, samples and coordinated drawings to settle the work before it
+                  reaches site. The same people then review how those decisions are being built,
+                  wherever the project is located.
+                </p>
+              </FadeInScroll>
+              <FadeInScroll direction="right" className="studio-page-practice-image">
+                <Image
+                  src="/images/studio/material-study.webp"
+                  alt="Architectural model, drawings and Nigerian material samples on the Ilorin studio table"
+                  fill
+                  sizes="(max-width: 900px) 100vw, 38vw"
+                  wrapperClassName="h-full w-full"
+                />
+                <span>Material study / Ilorin</span>
+              </FadeInScroll>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      <section className="section-space bg-surface-base" aria-labelledby="principles-heading">
         <Container>
           <FadeInScroll className="mb-14 lg:mb-20">
             <p className="eyebrow mb-5 flex items-center gap-3">
@@ -111,13 +165,13 @@ export default async function AboutPage() {
             </p>
             <h2
               id="principles-heading"
-              className="max-w-[20ch] text-balance font-display text-display-md text-content-primary"
+              className="max-w-[18ch] text-balance font-display text-display-md text-content-primary"
             >
-              Four things we hold to, including the inconvenient one.
+              The habits that keep distant sites connected.
             </h2>
           </FadeInScroll>
 
-          <ol className="grid gap-px overflow-hidden rounded-lg bg-ink-200 md:grid-cols-2">
+          <ol className="grid gap-px overflow-hidden bg-ink-200 md:grid-cols-2">
             {PRINCIPLES.map((principle, index) => (
               <FadeInScroll
                 key={principle.title}
@@ -131,7 +185,7 @@ export default async function AboutPage() {
                 <h3 className="text-balance font-display text-heading-lg text-content-primary">
                   {principle.title}
                 </h3>
-                <p className="text-pretty text-body-md text-content-secondary">{principle.body}</p>
+                <p className="text-body-md text-content-secondary">{principle.body}</p>
               </FadeInScroll>
             ))}
           </ol>
@@ -140,26 +194,38 @@ export default async function AboutPage() {
 
       <Stats />
 
-      <Team members={team.slice(0, 4)} />
+      <Team members={team} />
 
-      <section className="pb-section">
+      <section
+        className="studio-page-careers bg-surface-base pb-section"
+        aria-labelledby="careers-heading"
+      >
         <Container>
-          <FadeInScroll className="flex flex-col items-start gap-5 border-t border-line pt-10">
-            <p className="max-w-measure text-body-lg text-content-secondary">
-              There are {Math.max(team.length - 4, 0) + 38} more people behind these four, on site
-              and in the studio.
-            </p>
-            <Button href="/about/team" variant="secondary" iconRight={<ArrowRight />}>
-              Meet the whole team
-            </Button>
+          <FadeInScroll className="studio-page-careers-inner">
+            <div>
+              <p className="micro-label">
+                <span className="label-dot" /> Join the studio
+              </p>
+              <h2 id="careers-heading">Bring work you can explain.</h2>
+            </div>
+            <div>
+              <p>
+                We look for architects who understand site work, construction people who can read a
+                detail and interior designers who care how materials perform after handover. Send a
+                concise portfolio and tell us what you were responsible for.
+              </p>
+              <a href={`mailto:${siteConfig.contact.careersEmail}?subject=Portfolio`}>
+                {siteConfig.contact.careersEmail}
+              </a>
+            </div>
           </FadeInScroll>
         </Container>
       </section>
 
       <CTA
         eyebrow="Work with us"
-        title="Think we would suit your project?"
-        description="Send us the brief. If we are the wrong firm for it we will say so, and where we can, point you at someone better placed."
+        title="Have a project anywhere in Nigeria?"
+        description="Tell us where the site is, what you want to build and the stage you are at. Our Ilorin team will reply with the right first step within two working days."
       />
     </>
   );

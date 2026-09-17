@@ -11,9 +11,9 @@ const questions = [
       'Yes. Our architects, engineers, and construction team work together from the first brief through to handover. You can also appoint us for an individual service, including architectural design, interiors, or project management.',
   },
   {
-    question: 'Do you work on projects outside Lagos?',
+    question: 'Do you work on projects outside Ilorin?',
     answer:
-      'Yes. With offices in Lagos, Abuja, and Port Harcourt, we work across Nigeria. Tell us where your site is and we will discuss the right team and approach for your location.',
+      'Yes. DICKALO is based in Ilorin and available for work nationwide. Tell us where your site is and we will plan the right resident team, reporting rhythm and procurement approach for that location.',
   },
   {
     question: 'What should I have ready for our first conversation?',

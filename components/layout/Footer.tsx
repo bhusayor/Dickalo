@@ -100,7 +100,7 @@ export function Footer() {
         </div>
         <div className="footer-colophon">
           <p>
-            Lagos <span /> Abuja <span /> Port Harcourt
+            Ilorin <span /> Available nationwide <span /> Nigeria
           </p>
           <p>© {new Date().getFullYear()} DICKALO</p>
         </div>

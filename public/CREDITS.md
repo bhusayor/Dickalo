@@ -63,10 +63,19 @@ these arrived portrait without it, which crops badly in the landscape cards.
 
 ## What is deliberately NOT here
 
-**Team portraits.** The four people on `/about/team` are placeholder names, and
-putting stock photographs of real people beside invented job titles at a named
-company would present fabricated staff as real. The team cards fall back to a
-branded panel instead. Add real photographs of real colleagues through Sanity.
+**Generated studio and leadership references.** The images below were created
+with the built-in image-generation tool to establish a coherent Ilorin studio
+direction while Sanity is unconfigured. They are presentation references, not
+documentary photographs of DICKALO staff or completed work. Real CMS imagery
+takes priority when supplied.
+
+- `images/studio/ilorin-studio.webp`
+- `images/studio/nationwide-site-review.webp`
+- `images/studio/material-study.webp`
+- `images/team/chidi-okafor.webp`
+- `images/team/amara-eze.webp`
+- `images/team/segun-adeyemi.webp`
+- `images/team/ngozi-umeh.webp`
 
 **Team, project and testimonial imagery generally.** Everything above is
 *fallback* content, shown only while Sanity is unconfigured. Once the CMS has

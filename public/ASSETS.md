@@ -10,7 +10,10 @@ What is here already:
 | `videos/hero.mp4` | 2.7 MB | House under construction, 1280x720, 9s loop |
 | `images/hero-poster.jpg` | 72 KB | First frame of the video |
 | `images/projects/*.jpg` | ~2 MB total | Six fallback project covers, 1600x1067 |
-| `images/studio.jpg` | 252 KB | Used on /about |
+| `images/studio/ilorin-studio.webp` | Generated | Studio hero on `/about` |
+| `images/studio/nationwide-site-review.webp` | Generated | Nationwide delivery story on `/about` |
+| `images/studio/material-study.webp` | Generated | Material study on `/about` |
+| `images/team/*.webp` | Generated | Consistent fallback leadership portraits on `/about` |
 | `images/og-default.jpg` | 196 KB | 1200x630 social card |
 
 Still missing, and only cosmetic:
@@ -113,6 +116,7 @@ add here.
 
 | File | Notes |
 | --- | --- |
-| `images/studio.jpg` | Used on `/about`. Landscape, at least 2400px wide. |
+| `images/studio/ilorin-studio.webp` | Used on `/about`. Landscape studio scene. |
 
-Project and team photography all lives in Sanity, not in this folder.
+Real project and team photography should be supplied through Sanity. Local
+images are the complete fallback presentation used before CMS media is added.

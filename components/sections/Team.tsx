@@ -23,13 +23,13 @@ export function Team({ members, showHeading = true, variant = 'default' }: TeamP
   const isCompact = variant === 'compact';
 
   return (
-    <section className="section-space bg-surface-base">
+    <section id="team" className="section-space scroll-mt-24 bg-surface-base">
       <Container>
         {showHeading ? (
           <SectionTitle
-            eyebrow="The studio"
-            title="The people who will actually be on your project."
-            description="Not a stock photo among them. These are the names that appear on your drawings and turn up on your site."
+            eyebrow="The team"
+            title="One studio. Different disciplines."
+            description="The people responsible for design, construction and interiors work together from Ilorin and travel to project sites across Nigeria."
             className="mb-14 lg:mb-20"
           />
         ) : null}
@@ -37,31 +37,36 @@ export function Team({ members, showHeading = true, variant = 'default' }: TeamP
         <StaggerContainer
           stagger={0.08}
           as="ul"
-          className="grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4"
+          className="team-grid grid items-stretch gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-4"
         >
           {members.map((member) => (
-            <StaggerItem key={member._id} as="li" className="group flex flex-col gap-5">
+            <StaggerItem
+              key={member._id}
+              as="li"
+              className="team-card group flex h-full flex-col gap-5"
+            >
               <Image
                 source={member.image}
+                src={member.imageUrl}
                 alt={member.image?.alt || `${member.name}, ${member.role} at DICKALO`}
                 ratio="3/4"
                 cdnWidth={700}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 zoom
                 wrapperClassName="rounded-md"
-                className="grayscale transition-all duration-900 ease-expo group-hover:grayscale-0"
+                className="transition-transform duration-900 ease-expo"
               />
 
-              <div className="flex flex-col gap-1.5">
+              <div className="team-card-content flex flex-1 flex-col gap-1.5">
                 <h3 className="font-display text-heading-md text-content-primary">{member.name}</h3>
-                <p className="text-body-sm text-content-accent">{member.role}</p>
+                <p className="team-card-role text-body-sm text-content-accent">{member.role}</p>
 
                 {!isCompact && member.bio ? (
-                  <p className="mt-2 text-pretty text-body-sm text-content-muted">{member.bio}</p>
+                  <p className="team-card-bio mt-2 text-body-sm text-content-muted">{member.bio}</p>
                 ) : null}
 
                 {!isCompact && member.credentials?.length ? (
-                  <ul className="mt-3 flex flex-wrap gap-2">
+                  <ul className="team-card-credentials mt-auto flex flex-wrap gap-2 pt-5">
                     {member.credentials.map((credential) => (
                       <li
                         key={credential}

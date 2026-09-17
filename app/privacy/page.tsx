@@ -64,8 +64,8 @@ export default function PrivacyPage() {
             <p>
               For a privacy request, email{' '}
               <a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a>. You can
-              also write to {siteConfig.address.street}, {siteConfig.address.district},{' '}
-              {siteConfig.address.city}, {siteConfig.address.country}.
+              also write to our studio in {siteConfig.address.city}, {siteConfig.address.state},{' '}
+              {siteConfig.address.country}.
             </p>
           </article>
         </Container>

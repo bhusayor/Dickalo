@@ -215,7 +215,7 @@ export const STATS: StatItem[] = [
     label: 'Handed over on schedule',
     note: 'Measured against signed contract dates',
   },
-  { value: 42, label: 'People on the team', note: 'Three offices, studio and site' },
+  { value: 42, label: 'People on the team', note: 'Ilorin studio and project sites' },
 ];
 
 // ---------------------------------------------------------------------------

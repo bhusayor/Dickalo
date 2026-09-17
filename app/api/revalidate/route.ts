@@ -27,7 +27,7 @@ interface WebhookPayload {
 const INVALIDATION: Record<string, { tags: string[]; paths: string[] }> = {
   project: { tags: [CACHE_TAGS.projects], paths: ['/', '/projects'] },
   service: { tags: [CACHE_TAGS.services], paths: ['/', '/services'] },
-  teamMember: { tags: [CACHE_TAGS.team], paths: ['/about', '/about/team'] },
+  teamMember: { tags: [CACHE_TAGS.team], paths: ['/about'] },
   testimonial: { tags: [CACHE_TAGS.testimonials], paths: ['/'] },
   siteSettings: { tags: [CACHE_TAGS.settings], paths: ['/'] },
 };

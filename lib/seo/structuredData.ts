@@ -43,10 +43,8 @@ export function organizationSchema(): Json {
     priceRange: '₦₦₦',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: siteConfig.address.street,
-      addressLocality: siteConfig.address.district,
+      addressLocality: siteConfig.address.city,
       addressRegion: siteConfig.address.state,
-      postalCode: siteConfig.address.postalCode,
       addressCountry: siteConfig.address.countryCode,
     },
     geo: {

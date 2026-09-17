@@ -27,7 +27,6 @@ export const STATIC_ROUTES: Route[] = [
     changeFrequency: 'monthly' as const,
   })),
   { path: '/about', priority: 0.7, changeFrequency: 'monthly' },
-  { path: '/about/team', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/contact', priority: 0.8, changeFrequency: 'yearly' },
   { path: '/privacy', priority: 0.2, changeFrequency: 'yearly' },
   { path: '/terms', priority: 0.2, changeFrequency: 'yearly' },

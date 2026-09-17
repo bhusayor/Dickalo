@@ -82,7 +82,8 @@ const nextConfig = {
     return [
       { source: '/portfolio', destination: '/projects', permanent: true },
       { source: '/work', destination: '/projects', permanent: true },
-      { source: '/team', destination: '/about/team', permanent: true },
+      { source: '/team', destination: '/about#team', permanent: true },
+      { source: '/about/team', destination: '/about#team', permanent: true },
     ];
   },
 };

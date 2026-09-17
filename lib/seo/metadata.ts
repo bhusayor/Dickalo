@@ -42,6 +42,8 @@ export const BASE_KEYWORDS = [
   'residential architects Nigeria',
   'commercial construction Nigeria',
   'interior architecture Nigeria',
+  'architects in Ilorin',
+  'construction company Ilorin',
 ];
 
 export function buildMetadata(options: PageMetaOptions): Metadata {
@@ -131,16 +133,16 @@ export const pageMeta = {
     keywords: ['design and build Nigeria', 'architectural services Nigeria'],
   },
   about: {
-    title: 'About DICKALO — The Firm Behind the Buildings',
+    title: 'DICKALO Studio — Architecture & Construction, Ilorin',
     description:
-      'Founded in 2011, working across Nigeria from three offices. How we run a project, why design and construction sit under one roof, and who you work with.',
+      'Meet the DICKALO studio and team. Based in Ilorin, available nationwide and experienced in architecture and construction projects across Nigeria.',
     path: '/about',
   },
   team: {
-    title: 'Our Team — Architects and Builders Across Nigeria',
+    title: 'Our Team — DICKALO Studio, Ilorin',
     description:
       'The architects, engineers and site managers who will be on your project. Names, roles and what each of them is accountable for.',
-    path: '/about/team',
+    path: '/about#team',
   },
   contact: {
     title: 'Contact DICKALO — Start a Project',

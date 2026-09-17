@@ -81,7 +81,7 @@ the browser — never put a secret behind that prefix.
 | --- | --- |
 | `project` | Portfolio entries. Drives `/projects` and every detail page. |
 | `service` | The six services. Falls back to `lib/constants.ts`. |
-| `teamMember` | People on `/about/team`. |
+| `teamMember` | People in the team section on `/about`. |
 | `testimonial` | Client quotes on the homepage. |
 | `siteSettings` | Singleton: contact details, headline numbers, default OG image. |
 
