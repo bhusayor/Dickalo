@@ -263,8 +263,7 @@
   pointer-events: none;
   z-index: -1;
 }
-.hero-topline,
-.hero-foot {
+.hero-topline {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -322,31 +321,6 @@
 .hero-bottom-row .brand-button {
   min-width: 215px;
 }
-.hero-foot {
-  border-top: 1px solid #ffffff3b;
-  padding-top: 22px;
-  font-size: 10px;
-}
-.hero-scroll {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  font-size: 10px;
-  min-height: 44px;
-}
-.hero-scroll > span {
-  border: 1px solid #ffffff60;
-  border-radius: 50%;
-  width: 32px;
-  height: 42px;
-  display: grid;
-  place-items: center;
-  transition: transform 0.3s;
-}
-.hero-scroll:hover > span {
-  transform: translateY(4px);
-}
-
 /* Studio introduction and rolling disciplines */
 .studio-intro {
   padding-bottom: 0 !important;
@@ -851,8 +825,7 @@
 }
 @media (min-width: 1600px) {
   .hero-topline,
-  .hero-content,
-  .hero-foot {
+  .hero-content {
     width: 100%;
     max-width: 1472px;
     margin-inline: auto;
@@ -1011,9 +984,6 @@
     background:
       linear-gradient(90deg, #111a16a6, #15201960), linear-gradient(0deg, #101a1680, transparent);
   }
-  .hero-foot {
-    padding-top: 15px;
-  }
   .micro-label {
     font-size: 9px;
     letter-spacing: 0.1em;
@@ -1141,7 +1111,6 @@
   .portfolio-card img {
     transition: none !important;
   }
-  .hero-scroll:hover > span,
   .brand-button.brand-button:hover {
     transform: none;
   }
@@ -1622,14 +1591,6 @@ address {
   .hero-construction-fallback img {
     object-position: 66% center;
   }
-  .hero-foot {
-    flex-wrap: wrap;
-    gap: 15px;
-  }
-  .hero-scroll {
-    order: 2;
-    font-size: 9px;
-  }
   .film-title h2 {
     font-size: 54px;
   }
@@ -1694,14 +1655,6 @@ address {
 @media (max-width: 600px) {
   .architecture-hero {
     min-height: 740px;
-  }
-  .hero-foot {
-    flex-wrap: nowrap;
-    gap: 10px;
-  }
-  .hero-scroll {
-    order: 0;
-    gap: 10px;
   }
 }
 
@@ -2113,9 +2066,6 @@ address {
     margin-top: 22px;
     gap: 18px;
   }
-  .hero-scroll-track .hero-foot {
-    padding-top: 12px;
-  }
 }
 @media (max-height: 650px) and (prefers-reduced-motion: no-preference) {
   .hero-scroll-track .architecture-hero {
@@ -2171,8 +2121,5 @@ address {
   .hero-scroll-track .hero-bottom-row .brand-button {
     min-width: 0;
     padding-inline: 16px;
-  }
-  .hero-scroll-track .hero-foot {
-    padding-top: 5px;
   }
 }

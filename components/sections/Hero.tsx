@@ -4,7 +4,6 @@ import NextImage from 'next/image';
 import { useEffect, useRef } from 'react';
 import { Button } from '@/components/common/Button';
 import { ArrowUpRight } from '@/components/common/NavigationIcons';
-import { useSmoothScroll } from '@/components/layout/SmoothScrollProvider';
 import { gsap, registerGsap, ScrollTrigger } from '@/lib/animations/gsapAnimations';
 
 const imageSizes = '100vw';
@@ -14,8 +13,6 @@ export function Hero() {
   const section = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
-  const reveal = useRef<gsap.core.Timeline | null>(null);
-  const { scrollTo } = useSmoothScroll();
 
   useEffect(() => {
     registerGsap();
@@ -69,7 +66,6 @@ export function Hero() {
                   );
                 },
               });
-              reveal.current = story;
               section.current?.setAttribute('data-hero-state', 'foundation');
               section.current?.setAttribute('data-hero-progress', '0');
               model?.render(0);
@@ -113,7 +109,6 @@ export function Hero() {
             if (cancelled) return;
             animation?.revert();
             model?.dispose();
-            reveal.current = null;
             if (track.current) track.current.dataset.scene = 'fallback';
             ScrollTrigger.refresh();
           });
@@ -121,7 +116,6 @@ export function Hero() {
           cancelled = true;
           animation?.revert();
           model?.dispose();
-          reveal.current = null;
         };
       },
     );
@@ -192,19 +186,6 @@ export function Hero() {
               Explore our work
             </Button>
           </div>
-        </div>
-        <div className="hero-foot" data-hero-detail>
-          <button
-            type="button"
-            className="hero-scroll"
-            onClick={() => {
-              const trigger = reveal.current?.scrollTrigger;
-              if (trigger && trigger.progress < 0.9) scrollTo(trigger.end);
-              else scrollTo('#studio-intro', -90);
-            }}
-          >
-            <span aria-hidden="true">↓</span> Scroll to build it
-          </button>
         </div>
         <noscript>
           <style>{`
